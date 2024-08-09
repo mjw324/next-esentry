@@ -17,13 +17,12 @@ export function Footer() {
                 className="flex items-center space-x-2 text-2xl font-medium text-emerald-500 dark:text-gray-100"
               >
                 <Image
-                  src="/img/logo.svg"
-                  alt="N"
-                  width="32"
-                  height="32"
-                  className="w-8"
+                  src="/img/esentry-name-icon-dark.svg"
+                  alt="eSentry Logo"
+                  width="0"
+                  height="0"
+                  className="w-48"
                 />
-                <span>eSentry</span>
               </Link>
             </div>
 
