@@ -18,7 +18,7 @@ export const Testimonials = () => {
             </p>
 
             <Avatar
-              image={userOneImg}
+              image="img/user1.jpg"
               name="Sarah Steiner"
               title="VP Sales at Google"
             />
@@ -32,7 +32,7 @@ export const Testimonials = () => {
             </p>
 
             <Avatar
-              image={userTwoImg}
+              image="img/user2.jpg"
               name="Dylan Ambrose"
               title="Lead marketer at Netflix"
             />
@@ -46,7 +46,7 @@ export const Testimonials = () => {
             </p>
 
             <Avatar
-              image={userThreeImg}
+              image="img/user3.jpg"
               name="Gabrielle Winn"
               title="Co-founder of Acme Inc"
             />
@@ -68,7 +68,7 @@ function Avatar(props: Readonly<AvatarProps>) {
     <div className="flex items-center mt-8 space-x-3">
       <div className="flex-shrink-0 overflow-hidden rounded-full w-14 h-14">
         <Image
-          src={props.image}
+          src="{props.image}"
           width="40"
           height="40"
           alt="Avatar"
