@@ -4,6 +4,11 @@ import ThemeChanger from "./DarkSwitch";
 import Image from "next/image";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { useTheme } from "next-themes";
+import Link from "next/link";
+import ThemeChanger from "./DarkSwitch";
+import Image from "next/image";
+import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import { useTheme } from "next-themes";
 
 export const Navbar = () => {
   const { theme } = useTheme();
@@ -29,15 +34,15 @@ export const Navbar = () => {
                       <Image
                         src={theme === "dark" ? "/img/esentry-name-icon-dark.svg" : "/img/esentry-name-icon-light.svg"}
                         alt="eSentry Logo"
-                        width="0"
-                        height="0"
+                        width={192}
+                        height={48}
                         className="w-48"
                       />
                     </span>
                   </span>
                 </Link>
 
-                <DisclosureButton
+                <Disclosure.Button
                   aria-label="Toggle Menu"
                   className="px-2 py-1 ml-auto text-gray-500 rounded-md lg:hidden hover:text-emerald-500 focus:text-emerald-500 focus:bg-emerald-100 focus:outline-none dark:text-gray-300 dark:focus:bg-trueGray-700">
                   <svg
@@ -57,9 +62,9 @@ export const Navbar = () => {
                       />
                     )}
                   </svg>
-                </DisclosureButton>
+                </Disclosure.Button>
 
-                <DisclosurePanel className="flex flex-wrap w-full my-5 lg:hidden">
+                <Disclosure.Panel className="flex flex-wrap w-full my-5 lg:hidden">
                   <>
                     {navigation.map((item) => (
                       <Link
@@ -73,7 +78,7 @@ export const Navbar = () => {
                       Get Started
                     </Link>
                   </>
-                </DisclosurePanel>
+                </Disclosure.Panel>
               </div>
             </>
           )}
