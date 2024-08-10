@@ -8,7 +8,7 @@ export function Footer() {
     <div className="relative">
       <Container>
         <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-5">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <div>
               <Link
                 href="/"
@@ -45,16 +45,6 @@ export function Footer() {
             </div>
           </div>
 
-          <div>
-            <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
-
-            </div>
-          </div>
-          <div>
-            <div className="flex flex-wrap w-full -mt-2 -ml-3 lg:ml-0">
-
-            </div>
-          </div>
           <div className="">
             <div>Follow me!</div>
             <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
