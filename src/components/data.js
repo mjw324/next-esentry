@@ -1,19 +1,16 @@
 import {
   BellIcon,
-  FunnelIcon, // Use FunnelIcon instead of FilterIcon
+  FunnelIcon,
   ChartBarIcon,
   ClockIcon,
   TagIcon,
   InboxIcon,
 } from "@heroicons/react/24/solid";
 
-import benefitOneImg from "../../public/img/benefit-one.png"; // Replace with relevant image
-import benefitTwoImg from "../../public/img/benefit-two.png";
-
 const benefitOne = {
   title: "Real-Time Monitoring & Customization",
   desc: "eSentry provides powerful tools for tracking eBay and Amazon listings. Set up customized monitors to ensure you never miss out on the deals that matter most to you.",
-  image: benefitOneImg,
+  image: "/img/benefit-one.png", // Updated image path
   bullets: [
     {
       title: "24/7 Monitoring",
@@ -36,7 +33,7 @@ const benefitOne = {
 const benefitTwo = {
   title: "Instant Notifications & Alerts",
   desc: "Stay informed on-the-go with eSentry's instant notifications. Receive detailed alerts directly to your email or via Telegram.",
-  image: benefitTwoImg,
+  image: "/img/benefit-two.png", // Updated image path
   bullets: [
     {
       title: "Instant Telegram Alerts",
