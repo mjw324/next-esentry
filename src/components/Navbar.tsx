@@ -8,7 +8,12 @@ import { useTheme } from "next-themes";
 export const Navbar = () => {
   const { theme } = useTheme();
 
-  const navigation = ["Product", "Features", "Pricing", "Company", "Blog"];
+  const navigation = [
+    { name: "Benefits", href: "#benefits" },
+    { name: "Video", href: "#video" },
+    { name: "Testimonials", href: "#testimonials" },
+    { name: "FAQ", href: "#faq" },
+  ];
 
   return (
     <div className="w-full">
@@ -56,12 +61,12 @@ export const Navbar = () => {
 
                 <DisclosurePanel className="flex flex-wrap w-full my-5 lg:hidden">
                   <>
-                    {navigation.map((item, index) => (
+                    {navigation.map((item) => (
                       <Link
-                        key={index}
-                        href="/"
+                        key={item.name}
+                        href={item.href}
                         className="w-full px-4 py-2 -ml-4 text-gray-500 rounded-md dark:text-gray-300 hover:text-emerald-500 focus:text-emerald-500 focus:bg-emerald-100 dark:focus:bg-gray-800 focus:outline-none">
-                        {item}
+                        {item.name}
                       </Link>
                     ))}
                     <Link href="/" className="w-full px-6 py-2 mt-3 text-center text-white bg-emerald-600 rounded-md lg:ml-5">
@@ -77,12 +82,12 @@ export const Navbar = () => {
         {/* menu  */}
         <div className="hidden text-center lg:flex lg:items-center">
           <ul className="items-center justify-end flex-1 pt-6 list-none lg:pt-0 lg:flex">
-            {navigation.map((menu, index) => (
-              <li className="mr-3 nav__item" key={index}>
+            {navigation.map((item) => (
+              <li className="mr-3 nav__item" key={item.name}>
                 <Link
-                  href="/"
+                  href={item.href}
                   className="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-emerald-500 focus:text-emerald-500 focus:bg-emerald-100 focus:outline-none dark:focus:bg-gray-800">
-                  {menu}
+                  {item.name}
                 </Link>
               </li>
             ))}
