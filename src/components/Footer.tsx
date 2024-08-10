@@ -17,8 +17,8 @@ export function Footer() {
                 <Image
                   src="/img/esentry-name-icon-dark.svg"
                   alt="eSentry Logo"
-                  width="0"
-                  height="0"
+                  width="192"
+                  height="48"
                   className="w-48"
                 />
               </Link>
