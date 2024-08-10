@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ThemeChanger from "./DarkSwitch";
 import Image from "next/image";
-import Image from "next/image";
 import { useTheme } from "next-themes";
+import { Disclosure } from "@headlessui/react";
 
 export const Navbar = () => {
   const { theme, resolvedTheme } = useTheme();
@@ -13,13 +13,6 @@ export const Navbar = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  const navigation = [
-    { name: "Benefits", href: "#benefits" },
-    { name: "Video", href: "#video" },
-    { name: "Testimonials", href: "#testimonials" },
-    { name: "FAQ", href: "#faq" },
-  ];
 
   return (
     <React.Fragment>
