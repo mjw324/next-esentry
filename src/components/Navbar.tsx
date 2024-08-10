@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ThemeChanger from "./DarkSwitch";
-import { Disclosure } from "@headlessui/react";
 import Image from "next/image";
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
+import Image from "next/image";
 import { useTheme } from "next-themes";
 
 export const Navbar = () => {
