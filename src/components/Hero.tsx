@@ -41,7 +41,7 @@ export const Hero = () => {
         </div>
         <div className="flex items-center justify-center w-full lg:w-1/2">
           <div className="">
-            <Image
+            <Image 
               src="/img/hero.png"
               width="616"
               height="617"
@@ -49,7 +49,7 @@ export const Hero = () => {
               alt="Hero Illustration"
               loading="eager"
               placeholder="blur"
-            />
+              />
           </div>
         </div>
       </Container>
