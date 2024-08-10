@@ -7,7 +7,12 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react
 import { useTheme } from "next-themes";
 
 export const Navbar = () => {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navigation = [
     { name: "Benefits", href: "#benefits" },
@@ -29,7 +34,7 @@ export const Navbar = () => {
                   <span className="flex items-center space-x-2 text-2xl font-medium text-emerald-500 dark:text-gray-100">
                     <span>
                       <Image
-                        src={theme === "dark" ? "/img/esentry-name-icon-dark.svg" : "/img/esentry-name-icon-light.svg"}
+                        src={mounted && (theme === "dark" || resolvedTheme === "dark") ? "/img/esentry-name-icon-dark.svg" : "/img/esentry-name-icon-light.svg"}
                         alt="eSentry Logo"
                         width={192}
                         height={48}
