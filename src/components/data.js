@@ -10,11 +10,11 @@ import {
 const benefitOne = {
   title: "Real-Time Monitoring & Customization",
   desc: "eSentry provides powerful tools for tracking eBay and Amazon listings. Set up customized monitors to ensure you never miss out on the deals that matter most to you.",
-  image: "/img/benefit-one.png", // Updated image path
+  image: "/img/benefit-one.png",
   bullets: [
     {
       title: "24/7 Monitoring",
-      desc: "Keep an eye on eBay and Amazon listings in real-time, ensuring you are always the first to know.",
+      desc: "Keep a constant eye on eBay and Amazon listings, ensuring you are always the first to know.",
       icon: <ClockIcon />,
     },
     {
@@ -33,7 +33,7 @@ const benefitOne = {
 const benefitTwo = {
   title: "Instant Notifications & Alerts",
   desc: "Stay informed on-the-go with eSentry's instant notifications. Receive detailed alerts directly to your email or via Telegram.",
-  image: "/img/benefit-two.png", // Updated image path
+  image: "/img/benefit-two.png",
   bullets: [
     {
       title: "Instant Telegram Alerts",

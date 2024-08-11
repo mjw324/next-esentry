@@ -49,7 +49,7 @@ const faqdata = [
   },
   {
     question: "Is eSentry free to use?",
-    answer: "eSentry offers a free tier with basic monitoring features. For advanced features, you can upgrade to one of our premium plans.",
+    answer: "eSentry is free to use for up to 3 active monitors. If you need more monitors, you can upgrade to a premium plan for unlimited monitors and additional features.",
   },
 ];
 

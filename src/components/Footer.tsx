@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <div className="relative">
       <Container>
-        <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-5">
+        <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div>
               <Link
@@ -15,10 +15,10 @@ export function Footer() {
                 className="flex items-center space-x-2 text-2xl font-medium text-emerald-500 dark:text-gray-100"
               >
                 <Image
-                  src="/img/esentry-name-icon-dark.svg"
+                  src="/img/esentry-name-icon-gray.svg"
                   alt="eSentry Logo"
-                  width="192"
-                  height="48"
+                  width="0"
+                  height="0"
                   className="w-48"
                 />
               </Link>
@@ -44,26 +44,27 @@ export function Footer() {
               </a>
             </div>
           </div>
-
-          <div className="">
-            <div>Follow me!</div>
-            <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
-              <a
-                href="https://github.com/mjw324"
-                target="_blank"
-                rel="noopener"
-              >
-                <span className="sr-only">GitHub</span>
-                <GitHubIcon />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/micah-worth/"
-                target="_blank"
-                rel="noopener"
-              >
-                <span className="sr-only">LinkedIn</span>
-                <LinkedinIcon />
-              </a>
+          <div className="flex justify-start lg:justify-end">
+            <div>
+              <div>Follow me!</div>
+              <div className="flex mt-5 space-x-5 text-gray-400 dark:text-gray-500">
+                <a
+                  href="https://github.com/mjw324"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span className="sr-only">GitHub</span>
+                  <GitHubIcon />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/micah-worth/"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span className="sr-only">LinkedIn</span>
+                  <LinkedinIcon />
+                </a>
+              </div>
             </div>
           </div>
         </div>

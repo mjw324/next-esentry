@@ -194,7 +194,7 @@ export function PopupWidget() {
                               message: "Please enter a valid email",
                             },
                           })}
-                          placeholder="you@company.com"
+                          placeholder="you@email.com"
                           className={`w-full px-3 py-2 text-gray-600 placeholder-gray-300 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring   ${
                             errors.email
                               ? "border-red-600 focus:border-red-600 ring-red-100"
