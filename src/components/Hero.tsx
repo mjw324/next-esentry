@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/Container";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -14,11 +16,11 @@ export const Hero = () => {
           </p>
 
           <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
-            <a
-              href="/register"
-              className="px-8 py-4 text-lg font-medium text-center text-white bg-emerald-600 rounded-md">
-              Get Started for Free
-            </a>
+          <Link href="/register">
+              <Button className="p-8 text-lg font-semibold text-center text-white bg-emerald-600 rounded-md">
+                Get Started for Free
+              </Button> 
+          </Link>
             <a
               href="https://github.com/mjw324/next-esentry"
               className="flex items-center space-x-2 text-gray-500 dark:text-gray-400">

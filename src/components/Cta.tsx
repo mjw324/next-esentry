@@ -1,5 +1,7 @@
 import React from "react";
 import { Container } from "@/components/Container";
+import { Button } from "@nextui-org/react";
+import Link from "next/link";
 
 export const Cta = () => {
   return (
@@ -14,14 +16,11 @@ export const Cta = () => {
           </p>
         </div>
         <div className="flex-shrink-0 w-full text-center lg:w-auto">
-          <a
-            href="/register"
-            target="_blank"
-            rel="noopener"
-            className="inline-block py-3 mx-auto text-lg font-medium text-center text-emerald-600 bg-white rounded-md px-7 lg:px-10 lg:py-5 "
-          >
-            Register
-          </a>
+          <Link href="/register">
+              <Button className="p-8 text-lg font-semibold text-center bg-white text-emerald-600 rounded-md">
+                Register
+              </Button> 
+          </Link>
         </div>
       </div>
     </Container>
