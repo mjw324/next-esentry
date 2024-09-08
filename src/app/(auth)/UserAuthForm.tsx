@@ -1,35 +1,38 @@
-'use client';
+"use client";
 
-import { Button, Input } from '@nextui-org/react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Facebook from '@/svg_components/Facebook';
-import Github from '@/svg_components/Github';
-import Google from '@/svg_components/Google';
-import { signIn } from 'next-auth/react';
-import { useSearchParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { z } from 'zod';
+import { Button, Input } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Github from "@/svg_components/Github";
+import Google from "@/svg_components/Google";
+import LogInSquare from "@/svg_components/LogInSquare";
+import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
+import { z } from "zod";
 
 const emailSchema = z.string().trim().email();
 
-export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
-  const [email, setEmail] = useState('');
+export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
+  const [email, setEmail] = useState("");
   const [inputError, setInputError] = useState<string | null>(null);
   const [loading, setLoading] = useState({
     email: false,
     github: false,
-    facebook: false,
     google: false,
   });
 
-  const areButtonsDisabled = loading.email || loading.github || loading.facebook || loading.google;
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('from') || '/feed';
+  const areButtonsDisabled = loading.email || loading.github || loading.google;
 
-  const onEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  }, []);
+  // Use /dashboard as the default callback URL after successful sign-in
+  const callbackUrl = "/dashboard";
+
+  const onEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+    },
+    []
+  );
 
   const submitEmail = useCallback(async () => {
     setLoading((prev) => ({
@@ -39,7 +42,7 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
 
     const validateEmail = emailSchema.safeParse(email);
     if (validateEmail.success) {
-      const signInResult = await signIn('email', {
+      const signInResult = await signIn("email", {
         email: email.toLowerCase(),
         redirect: false,
         callbackUrl,
@@ -51,10 +54,10 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
       }));
 
       if (!signInResult?.ok) {
-        toast.error('Something went wrong');
+        toast.error("Something went wrong");
         return;
       }
-      toast.success('Email Sent! Please check your email to sign in.');
+      toast.success("Email Sent! Please check your email to sign in.");
     } else {
       setInputError(validateEmail.error.issues[0].message);
       setLoading((prev) => ({
@@ -65,13 +68,13 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
   }, [email, callbackUrl]);
 
   const signInWithProvider = useCallback(
-    (provider: 'github' | 'google' | 'facebook') => async () => {
+    (provider: "github" | "google") => async () => {
       setLoading((prev) => ({
         ...prev,
         [provider]: true,
       }));
       const signInResult = await signIn(provider, {
-        callbackUrl,
+        callbackUrl, // Redirect to dashboard after successful sign-in
       });
       setLoading((prev) => ({
         ...prev,
@@ -79,10 +82,10 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
       }));
 
       if (signInResult?.error) {
-        toast.error('Something went wrong');
+        toast.error("Something went wrong");
       }
     },
-    [callbackUrl],
+    [callbackUrl]
   );
 
   return (
@@ -94,8 +97,8 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
           onChange={onEmailChange}
           label="Email"
           placeholder="Enter your email"
-          isInvalid={inputError == 'error'}
-          errorMessage={inputError || ''}
+          isInvalid={inputError == "error"}
+          errorMessage={inputError || ""}
         />
       </div>
       <div className="mb-5">
@@ -105,7 +108,7 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
           isLoading={loading.email}
           isDisabled={areButtonsDisabled}
         >
-          {mode === 'login' ? 'Login' : 'Sign up'} with Email
+          {mode === "login" ? "Login" : "Sign up"} with Email
         </Button>
       </div>
       <div className="relative mb-4">
@@ -113,23 +116,15 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
           <span className="w-full border-t border-muted" />
         </div>
         <div className="relative flex justify-center">
-          <span className="bg-background px-3 text-muted-foreground">or continue with</span>
+          <span className="bg-background px-3 text-muted-foreground">
+            or continue with
+          </span>
         </div>
       </div>
       <div className="mb-4 flex flex-col gap-3">
-        <Button
-          onPress={signInWithProvider('github')}
-          fullWidth
-          variant="flat"
-          startContent={<Github />}
-          isLoading={loading.github}
-          isDisabled={areButtonsDisabled}
-        >
-          Github
-        </Button>
         <div className="flex gap-2">
           <Button
-            onPress={signInWithProvider('google')}
+            onPress={signInWithProvider("google")}
             fullWidth
             variant="flat"
             startContent={<Google />}
@@ -139,14 +134,14 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
             Google
           </Button>
           <Button
-            onPress={signInWithProvider('facebook')}
+            onPress={signInWithProvider("github")}
             fullWidth
             variant="flat"
-            startContent={<Facebook />}
-            isLoading={loading.facebook}
+            startContent={<Github />}
+            isLoading={loading.github}
             isDisabled={areButtonsDisabled}
           >
-            Facebook
+            Github
           </Button>
         </div>
       </div>
