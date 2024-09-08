@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from "react";
 import { SVGProps } from 'react';
 
 function SvgGoogle(props: SVGProps<SVGSVGElement>) {

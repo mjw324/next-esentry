@@ -6,7 +6,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import Facebook from '@/svg_components/Facebook';
 import Github from '@/svg_components/Github';
 import Google from '@/svg_components/Google';
-import LogInSquare from '@/svg_components/LogInSquare';
 import { signIn } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useState } from 'react';
@@ -103,7 +102,6 @@ export function UserAuthForm({ mode }: { mode: 'login' | 'register' }) {
         <Button
           onPress={submitEmail}
           fullWidth
-          startContent={<LogInSquare />}
           isLoading={loading.email}
           isDisabled={areButtonsDisabled}
         >
