@@ -18,7 +18,14 @@ export const Navbar = () => {
   const isDashboard = pathname === "/dashboard";
 
   return (
-    <NextUINavbar isBordered={false} isBlurred={true}>
+    <NextUINavbar
+      isBordered={false}
+      isBlurred={true}
+      maxWidth="full"
+      classNames={{
+        base: "container px-8 mx-auto xl:px-0",
+      }}
+    >
       {/* Brand section */}
       <NavbarBrand>
         <Link href="/">
@@ -26,15 +33,15 @@ export const Navbar = () => {
             className="block dark:hidden"
             src="/img/esentry-name-icon-light.svg"
             alt="eSentry Logo"
-            width={100}
+            width={140}
             height={48}
           />
           <Image
             className="hidden dark:block"
             src="/img/esentry-name-icon-dark.svg"
             alt="eSentry Logo"
-            width={100}
-            height={48}
+            width={140}
+            height={8}
           />
         </Link>
       </NavbarBrand>
