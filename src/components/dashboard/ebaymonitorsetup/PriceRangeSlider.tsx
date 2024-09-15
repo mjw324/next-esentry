@@ -65,7 +65,9 @@ export default function PriceRangeSlider() {
         step={1}
         value={priceRange}
         defaultValue={[0, 0]}
-        onChange={(value) => setPriceRange(value)}
+        onChange={(value) =>
+          setPriceRange(Array.isArray(value) ? value : [value, value])
+        }
         formatOptions={{ style: "currency", currency: "USD" }}
         classNames={{
           base: "gap-3",
@@ -73,7 +75,10 @@ export default function PriceRangeSlider() {
             "bg-gradient-to-r from-slate-300 to-emerald-300 dark:from-slate-600 dark:to-emerald-800",
         }}
         renderLabel={({ children, ...props }) => (
-          <label {...props} className="text-medium flex gap-2 items-center">
+          <label
+            {...props}
+            className="text-medium text-default-600 flex gap-2 items-center"
+          >
             {children}
             <Tooltip
               className="w-[230px] px-1.5 text-tiny text-default-600 rounded-small"
@@ -98,7 +103,7 @@ export default function PriceRangeSlider() {
           >
             <span
               className={cn(
-                "transition-transform shadow-small rounded-full w-5 h-5 block group-data-[dragging=true]:scale-80",
+                "transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75",
                 index === 0
                   ? "bg-gradient-to-br from-slate-300 to-slate-600"
                   : "bg-gradient-to-br from-emerald-300 to-emerald-800"
@@ -112,14 +117,14 @@ export default function PriceRangeSlider() {
             <Input
               label="Min"
               size="sm"
-              value={priceRange[0]}
+              value={String(priceRange[0])} // Convert number to string
               onChange={(e) => handlePriceInputChange(0, e.target.value)}
               type="number"
               labelPlacement="outside"
               classNames={{
-                inputWrapper: "max-w-24", // Override w-full with w-auto
-                innerWrapper: "max-w-24", // Ensure the internal wrapper takes only the input size
-                input: "max-w-24", // Make the input take only the required space
+                inputWrapper: "max-w-24",
+                innerWrapper: "max-w-24",
+                input: "max-w-24 text-default-600",
               }}
               variant="bordered"
               isClearable={false}
@@ -130,18 +135,18 @@ export default function PriceRangeSlider() {
                 </div>
               }
             />
-            {/* Max Price Input */}
+
             <Input
               label="Max"
               size="sm"
-              value={priceRange[1]}
+              value={String(priceRange[1])} // Convert number to string
               onChange={(e) => handlePriceInputChange(1, e.target.value)}
               type="number"
               labelPlacement="outside"
               classNames={{
-                inputWrapper: "max-w-24", // Override w-full with w-auto
-                innerWrapper: "max-w-24", // Ensure the internal wrapper takes only the input size
-                input: "max-w-24", // Make the input take only the required space
+                inputWrapper: "max-w-24",
+                innerWrapper: "max-w-24",
+                input: "max-w-24 text-default-600",
               }}
               variant="bordered"
               isClearable={false}

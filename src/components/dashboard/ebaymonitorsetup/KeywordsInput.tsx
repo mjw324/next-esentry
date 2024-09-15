@@ -59,8 +59,8 @@ export default function KeywordsInput({
     // Manually blur and re-focus the input after the chip is removed to recheck the "filled within" state
     if (inputRef.current) {
       setTimeout(() => {
-        inputRef.current.blur();
-        inputRef.current.focus();
+        inputRef.current?.blur();
+        inputRef.current?.focus();
       }, 0);
     }
   };

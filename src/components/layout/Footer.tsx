@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
-import { Container } from "@/components/Container";
+import { Container } from "@/components/home/Container";
 
 export function Footer() {
   return (
@@ -25,7 +25,9 @@ export function Footer() {
             </div>
 
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
-              eSentry helps you stay ahead by providing real-time alerts for eBay and Amazon listings that match your preferences, ensuring you never miss out on the perfect deal.
+              eSentry helps you stay ahead by providing real-time alerts for
+              eBay and Amazon listings that match your preferences, ensuring you
+              never miss out on the perfect deal.
             </div>
 
             <div className="mt-5">

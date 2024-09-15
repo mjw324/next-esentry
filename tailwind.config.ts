@@ -12,7 +12,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
-  darkMode: "class", // or 'media' or 'class'
+  darkMode: "class",
   theme: {
     extend: {
       colors: {

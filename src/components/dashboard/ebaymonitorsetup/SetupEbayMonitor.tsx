@@ -39,7 +39,7 @@ export default function SetupEbayMonitor() {
         condition,
         seller,
       });
-      onOpenChange(false); // Close modal after saving
+      onOpenChange(); // Close modal after saving
     }, 1000); // Simulating a 1-second delay
   };
 
@@ -60,16 +60,9 @@ export default function SetupEbayMonitor() {
         onOpenChange={onOpenChange}
         radius="lg"
         classNames={{
-          body: "py-6 overflow-hidden", // Ensures body content doesn't overflow horizontally
-          backdrop: "bg-white/20 backdrop-blur-md", // Glass-like effect with blurred background
-          base: "border-none bg-white/30 dark:bg-gray-900/30 text-white shadow-xl backdrop-blur-lg", // Glassmorphism effect
-          header: "border-b border-gray-300 dark:border-gray-700",
-          footer: "border-t border-gray-300 dark:border-gray-700",
-          closeButton: "hover:bg-white/5 active:bg-white/10",
-        }}
-        css={{
-          maxWidth: "100%", // Ensures modal doesn't exceed viewport width
-          width: "700px",
+          body: "py-6 overflow-hidden", // Ensures body content doesn't overflow horizontally          base: "border-none bg-white/30 dark:bg-gray-900/30 text-white shadow-xl backdrop-blur-lg", // Glassmorphism effect
+          header: "border-b border-zinc-300 dark:border-zinc-700",
+          footer: "border-t border-zinc-300 dark:border-zinc-700",
         }}
       >
         <ModalContent>
@@ -77,7 +70,9 @@ export default function SetupEbayMonitor() {
             <>
               {/* Modal Header */}
               <ModalHeader className="flex flex-col gap-1">
-                <h4 className="text-medium font-medium">eBay Monitor Setup</h4>
+                <h4 className="text-medium font-semibold text-default-700">
+                  eBay Monitor Setup
+                </h4>
                 <p className="text-small text-default-400">
                   Customize your monitor so we know when to send you the perfect
                   match.
@@ -123,7 +118,7 @@ export default function SetupEbayMonitor() {
 
               {/* Modal Footer */}
               <ModalFooter>
-                <Button color="foreground" variant="light" onPress={onClose}>
+                <Button variant="light" onPress={onClose}>
                   Cancel
                 </Button>
                 <Button
