@@ -72,7 +72,7 @@ export default function PriceRangeSlider() {
         classNames={{
           base: "gap-3",
           filler:
-            "bg-gradient-to-r from-slate-300 to-emerald-300 dark:from-slate-600 dark:to-emerald-800",
+            "bg-gradient-to-r from-cyan-300 to-green-300 dark:from-cyan-600 dark:to-green-800",
         }}
         renderLabel={({ children, ...props }) => (
           <label
@@ -105,8 +105,8 @@ export default function PriceRangeSlider() {
               className={cn(
                 "transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75",
                 index === 0
-                  ? "bg-gradient-to-br from-slate-300 to-slate-600"
-                  : "bg-gradient-to-br from-emerald-300 to-emerald-800"
+                  ? "bg-gradient-to-br from-cyan-300 to-cyan-800"
+                  : "bg-gradient-to-br from-green-300 to-green-800"
               )}
             />
           </div>

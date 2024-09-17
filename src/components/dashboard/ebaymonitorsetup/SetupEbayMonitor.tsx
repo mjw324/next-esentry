@@ -1,3 +1,4 @@
+// dashboard/ebaymonitorsetup/SetupEbayMonitor.tsx
 "use client";
 
 import { useState } from "react";
@@ -11,19 +12,35 @@ import {
   Spacer,
   Divider,
 } from "@nextui-org/react";
-import PriceRangeSlider from "@/components/dashboard/ebaymonitorsetup/PriceRangeSlider";
-import KeywordsInput from "@/components/dashboard/ebaymonitorsetup/KeywordsInput";
-import ExcludedKeywordsInput from "@/components/dashboard/ebaymonitorsetup/ExcludedKeywordsInput";
-import ConditionCheckboxGroup from "@/components/dashboard/ebaymonitorsetup/ConditionCheckboxGroup";
-import SellerInput from "@/components/dashboard/ebaymonitorsetup/SellerInput";
+import PriceRangeSlider from "./PriceRangeSlider";
+import KeywordsInput from "./KeywordsInput";
+import ExcludedKeywordsInput from "./ExcludedKeywordsInput";
+import ConditionCheckboxGroup from "./ConditionCheckboxGroup";
+import SellerInput from "./SellerInput";
 import { useDisclosure } from "@nextui-org/react";
 
-export default function SetupEbayMonitor() {
-  const [keywords, setKeywords] = useState<string[]>([]);
-  const [excludedKeywords, setExcludedKeywords] = useState<string[]>([]);
-  const [condition, setCondition] = useState<string[]>([]);
-  const [seller, setSeller] = useState("");
-  const [loading, setLoading] = useState(false); // Loading state for save button
+interface SetupEbayMonitorProps {
+  isDemo?: boolean;
+  initialKeywords?: string[];
+  initialExcludedKeywords?: string[];
+  initialCondition?: string[];
+  initialSeller?: string;
+}
+
+export default function SetupEbayMonitor({
+  isDemo = false,
+  initialKeywords = [],
+  initialExcludedKeywords = [],
+  initialCondition = [],
+  initialSeller = "",
+}: SetupEbayMonitorProps) {
+  const [keywords, setKeywords] = useState<string[]>(initialKeywords);
+  const [excludedKeywords, setExcludedKeywords] = useState<string[]>(
+    initialExcludedKeywords
+  );
+  const [condition, setCondition] = useState<string[]>(initialCondition);
+  const [seller, setSeller] = useState(initialSeller);
+  const [loading, setLoading] = useState(false);
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -39,6 +56,13 @@ export default function SetupEbayMonitor() {
         condition,
         seller,
       });
+      if (isDemo) {
+        // Show a message or do something specific in demo mode
+        alert("This is a demo. Sign up to save your monitor!");
+      } else {
+        // Normal operation in the dashboard
+        // TODO: Implement actual save logic here
+      }
       onOpenChange(); // Close modal after saving
     }, 1000); // Simulating a 1-second delay
   };
@@ -50,17 +74,18 @@ export default function SetupEbayMonitor() {
         onPress={onOpen}
         className="px-4 py-4 text-sm font-semibold text-center text-white bg-emerald-600 rounded-md"
       >
-        Set up eBay Monitor
+        {isDemo ? "Try Setting Up a Monitor" : "Set up eBay Monitor"}
       </Button>
 
       {/* Modal setup with glassmorphism effect */}
       <Modal
-        backdrop="blur" // Glassmorphism backdrop effect
+        backdrop="blur"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         radius="lg"
         classNames={{
-          body: "py-6 overflow-hidden", // Ensures body content doesn't overflow horizontally          base: "border-none bg-white/30 dark:bg-gray-900/30 text-white shadow-xl backdrop-blur-lg", // Glassmorphism effect
+          body: "py-6 overflow-hidden",
+          base: "border-none bg-white/90 dark:bg-gray-900/90 text-white shadow-xl backdrop-blur-lg",
           header: "border-b border-zinc-300 dark:border-zinc-700",
           footer: "border-t border-zinc-300 dark:border-zinc-700",
         }}
@@ -71,7 +96,7 @@ export default function SetupEbayMonitor() {
               {/* Modal Header */}
               <ModalHeader className="flex flex-col gap-1">
                 <h4 className="text-medium font-semibold text-default-700">
-                  eBay Monitor Setup
+                  {isDemo ? "Demo: eBay Monitor Setup" : "eBay Monitor Setup"}
                 </h4>
                 <p className="text-small text-default-400">
                   Customize your monitor so we know when to send you the perfect
@@ -124,33 +149,11 @@ export default function SetupEbayMonitor() {
                 <Button
                   color="success"
                   variant="flat"
-                  isLoading={loading} // Use the isLoading prop to control the loading state
+                  isLoading={loading}
                   onPress={handleSaveMonitor}
-                  disabled={loading} // Disable the button while loading
-                  spinner={
-                    <svg
-                      className="animate-spin h-5 w-5 text-current"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      />
-                      <path
-                        className="opacity-75"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                  }
+                  disabled={loading}
                 >
-                  Save Monitor
+                  {isDemo ? "Save Monitor (Demo)" : "Save Monitor"}
                 </Button>
               </ModalFooter>
             </>
