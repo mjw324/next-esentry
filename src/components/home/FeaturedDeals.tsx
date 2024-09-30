@@ -123,7 +123,7 @@ export const FeaturedDeals = () => {
         </Button>
 
         {/* Carousel Container */}
-        <div className="w-full max-w-4xl h-[500px] relative overflow-hidden rounded-lg">
+        <div className="w-full max-w-4xl h-[800px] relative overflow-hidden rounded-lg">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentIndex}
@@ -132,7 +132,7 @@ export const FeaturedDeals = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              className="absolute w-full h-full flex flex-col justify-between items-center p-8"
+              className="absolute w-full h-full flex flex-col justify-between items-center p-7"
             >
               {/* Image and Price Badge Container */}
               <div className="relative w-full h-3/4">
@@ -154,7 +154,7 @@ export const FeaturedDeals = () => {
                 />
 
                 {/* Price Badge */}
-                <div className="absolute top-0 right-36 bg-gradient-to-tr dark:to-green-600 dark:from-cyan-600 to-green-400 from-cyan-400 text-white px-4 py-2 rounded-full shadow-md flex flex-col items-center">
+                <div className="absolute top-0 right-10 bg-gradient-to-tr dark:to-green-600 dark:from-cyan-600 to-green-400 from-cyan-400 text-white px-4 py-2 rounded-full shadow-md flex flex-col items-center">
                   <span className="text-sm line-through opacity-75">
                     ${deals[currentIndex].msrp}
                   </span>
