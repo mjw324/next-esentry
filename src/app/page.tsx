@@ -6,7 +6,6 @@ import { Benefits } from "@/components/home/Benefits";
 import { Faq } from "@/components/home/Faq";
 import { Cta } from "@/components/home/Cta";
 import { FeaturedDeals } from "@/components/home/FeaturedDeals";
-import SetupEbayMonitor from "@/components/dashboard/ebaymonitorsetup/SetupEbayMonitor";
 import { benefitOne, benefitTwo } from "@/components/data";
 
 export default function Home() {
@@ -25,17 +24,6 @@ export default function Home() {
 
       {/* Include FeaturedDeals component */}
       <FeaturedDeals />
-
-      {/* Mock Demo of SetupEbayMonitor */}
-      <div className="flex justify-center my-8">
-        <SetupEbayMonitor
-          isDemo={true}
-          initialKeywords={["PlayStation 5"]}
-          initialExcludedKeywords={["Used"]}
-          initialCondition={["new"]}
-          initialSeller=""
-        />
-      </div>
 
       <SectionTitle
         preTitle="eSentry Benefits"

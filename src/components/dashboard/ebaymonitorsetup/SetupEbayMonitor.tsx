@@ -74,7 +74,7 @@ export default function SetupEbayMonitor({
         onPress={onOpen}
         className="px-4 py-4 text-sm font-semibold text-center text-white bg-emerald-600 rounded-md"
       >
-        {isDemo ? "Try Setting Up a Monitor" : "Set up eBay Monitor"}
+        {isDemo ? "Try Setting Up This Monitor" : "Set up eBay Monitor"}
       </Button>
 
       {/* Modal setup with glassmorphism effect */}
