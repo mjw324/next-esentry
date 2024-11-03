@@ -154,7 +154,7 @@ export const FeaturedDeals = () => {
                 />
 
                 {/* Price Badge */}
-                <div className="absolute top-0 right-10 bg-gradient-to-tr dark:to-green-600 dark:from-cyan-600 to-green-400 from-cyan-400 text-white px-4 py-2 rounded-full shadow-md flex flex-col items-center">
+                <div className="absolute top-0 right-10 bg-gradient-to-tr dark:to-green-600 dark:from-cyan-600 to-green-400 from-cyan-400 dark:text-white text-black font-medium px-4 py-2 rounded-full shadow-md flex flex-col items-center">
                   <span className="text-sm line-through opacity-75">
                     ${deals[currentIndex].msrp}
                   </span>

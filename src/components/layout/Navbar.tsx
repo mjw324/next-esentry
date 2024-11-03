@@ -8,14 +8,26 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
 } from "@nextui-org/react";
 import ThemeChanger from "@/components/layout/ThemeSwitcher";
 import Image from "next/image";
+import { HamburgerIcon } from "@/svg_components/HamburgerIcon";
+import { useState, useEffect } from "react";
 
 export const Navbar = () => {
   const pathname = usePathname(); // Detect the current URL path
+  // Open state for the dropdown and hamburger icon
+  const [opened, setOpened] = useState(false);
 
-  const isDashboard = pathname === "/dashboard";
+  const [isDashboard, setIsDashboard] = useState(false);
+  // Detection for any subroute of '/dashboard'
+  useEffect(() => {
+    setIsDashboard(pathname.startsWith("/dashboard"));
+  }, [pathname]);
 
   return (
     <NextUINavbar
@@ -28,7 +40,7 @@ export const Navbar = () => {
     >
       {/* Brand section */}
       <NavbarBrand>
-        <Link href="/">
+        <Link href={isDashboard ? "/dashboard" : "/"}>
           <Image
             className="block dark:hidden"
             src="/img/esentry-name-icon-light.svg"
@@ -41,24 +53,59 @@ export const Navbar = () => {
             src="/img/esentry-name-icon-dark.svg"
             alt="eSentry Logo"
             width={140}
-            height={8}
+            height={48}
           />
         </Link>
       </NavbarBrand>
 
-      {/* Conditionally render content based on the page */}
+      {/* Navbar Content */}
       <NavbarContent justify="end">
+        {/* Theme Switcher */}
+        <NavbarItem>
+          <ThemeChanger />
+        </NavbarItem>
+
         {isDashboard ? (
           <>
+            {/* Dropdown Menu with Hamburger Icon */}
             <NavbarItem>
-              <Link href="/dashboard/settings">
-                <Button>Settings</Button>
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link href="/dashboard/profile">
-                <Button>Profile</Button>
-              </Link>
+              <Dropdown
+                placement="bottom-end"
+                showArrow
+                offset={10}
+                classNames={{
+                  base: "bg-white dark:bg-gray-800 text-black dark:text-white",
+                }}
+              >
+                <DropdownTrigger>
+                  <Button isIconOnly variant="light" aria-label="Menu">
+                    <HamburgerIcon opened={opened} setOpened={setOpened} />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Dashboard Navigation"
+                  variant="flat"
+                  color="secondary"
+                >
+                  <DropdownItem key="dashboard">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </DropdownItem>
+                  <DropdownItem key="create-monitor">
+                    <Link href="/dashboard/create-monitor">Create Monitor</Link>
+                  </DropdownItem>
+                  <DropdownItem key="check-item">
+                    <Link href="/dashboard/check-item">Check Item</Link>
+                  </DropdownItem>
+                  <DropdownItem key="account-settings">
+                    <Link href="/dashboard/account-settings">
+                      Account Settings
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="logout">
+                    <Link href="/logout">Logout</Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </NavbarItem>
           </>
         ) : (
@@ -79,11 +126,6 @@ export const Navbar = () => {
             </NavbarItem>
           </>
         )}
-
-        {/* Theme Switcher for all pages */}
-        <NavbarItem>
-          <ThemeChanger />
-        </NavbarItem>
       </NavbarContent>
     </NextUINavbar>
   );
