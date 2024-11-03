@@ -28,7 +28,7 @@ eSentry is a powerful web application designed to monitor eBay for items as requ
 ## 📫 Contact
 
 - **Author:** Micah Worth
-- **LinkedIn:** [linkedin.com/in/yourprofile](https://linkedin.com/in/micah-worth)
+- **LinkedIn:** [linkedin.com/in/micah-worth](https://linkedin.com/in/micah-worth)
 
 ## 🎉 Thank You
 
