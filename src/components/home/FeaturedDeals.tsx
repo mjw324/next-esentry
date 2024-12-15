@@ -11,21 +11,25 @@ const deals = [
     name: "iPhone 15 Pro",
     image: "/img/iphone_15_pro.png",
     msrp: 1099,
-    discountPrice: 850,
+    discountPrice: 700,
     initialKeywords: ["iPhone", "15 Pro", "Apple"],
     initialExcludedKeywords: ["Used", "Refurbished"],
     initialCondition: [],
     initialSeller: "",
+    initialMinPrice: 400,
+    initialMaxPrice: 900,
   },
   {
     name: "Nintendo Switch",
     image: "/img/nintendo_switch.png",
     msrp: 299,
-    discountPrice: 190,
+    discountPrice: 120,
     initialKeywords: ["Nintendo", "Switch"],
     initialExcludedKeywords: ["Broken", "Parts"],
     initialCondition: ["used", "openBox"],
     initialSeller: "",
+    initialMinPrice: 80,
+    initialMaxPrice: 150,
   },
   {
     name: "Air Jordan 1 Hyper Royal",
@@ -36,16 +40,20 @@ const deals = [
     initialExcludedKeywords: ["Replica", "Fake", "Used"],
     initialCondition: ["used", "openBox"],
     initialSeller: "",
+    initialMinPrice: 50,
+    initialMaxPrice: 150,
   },
   {
     name: "Zodiac Olympos Watch",
     image: "/img/zodiac_olympos_watch.png",
     msrp: 895,
-    discountPrice: 655,
+    discountPrice: 630,
     initialKeywords: ["Zodiac", "Olympos", "Watch"],
-    initialExcludedKeywords: ["Damaged", "Fake"],
+    initialExcludedKeywords: ["Damaged", "Replica"],
     initialCondition: ["used", "openBox"],
     initialSeller: "",
+    initialMinPrice: 300,
+    initialMaxPrice: 700,
   },
 ];
 
@@ -177,6 +185,8 @@ export const FeaturedDeals = () => {
                   }
                   initialCondition={deals[currentIndex].initialCondition}
                   initialSeller={deals[currentIndex].initialSeller}
+                  initialMinPrice={deals[currentIndex].initialMinPrice}
+                  initialMaxPrice={deals[currentIndex].initialMaxPrice}
                 />
               </div>
             </motion.div>

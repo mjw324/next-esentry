@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Raleway } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 import "@theme-toggles/react/css/Expand.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "eSentry",
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     // Supress hydration warning for the theme changer
     <html lang="en" suppressHydrationWarning>
-      <body className={`${raleway.className} antialiased`}>
+      <body className={`${inter.className} antialiased`}>
         <Providers>
           {/* Navbar dynamically adjusts based on the current path */}
           <Navbar />

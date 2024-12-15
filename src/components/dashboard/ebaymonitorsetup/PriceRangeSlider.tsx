@@ -1,73 +1,95 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Slider, Tooltip, Input } from "@nextui-org/react";
 import InfoIcon from "@/svg_components/InfoIcon";
 import cn from "@/utils/cn";
 
-export default function PriceRangeSlider() {
+interface PriceRangeSliderProps {
+  value: [number | undefined, number | undefined];
+  onChange: (value: [number | undefined, number | undefined]) => void;
+}
+
+export default function PriceRangeSlider({
+  value,
+  onChange,
+}: PriceRangeSliderProps) {
   const [mounted, setMounted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [tempInputs, setTempInputs] = useState<[string, string]>(["", ""]);
+  const MAX_PRICE = 100000;
 
-  useEffect(() => {
-    // Mark the component as mounted after hydration
-    setMounted(true);
-  }, []);
-
-  // State for the price range and max value
-  const [priceRange, setPriceRange] = useState([0, 0]);
-  const [maxValue, setMaxValue] = useState(500);
-
-  // Function to handle manual input for min and max prices
-  const handlePriceInputChange = (index: number, value: string) => {
-    let newValue = Number(value);
-    let updatedPriceRange = [...priceRange];
-
-    // If input is for min (index === 0), ensure it's not greater than the max
-    if (index === 0) {
-      if (newValue > priceRange[1]) {
-        newValue = priceRange[1]; // Prevent min from being greater than max
-      }
-      updatedPriceRange[0] = newValue;
-    }
-
-    // If input is for max (index === 1), ensure it's not smaller than the min
-    if (index === 1) {
-      if (newValue < priceRange[0]) {
-        newValue = priceRange[0]; // Prevent max from being less than min
-      }
-      updatedPriceRange[1] = newValue;
-
-      // If the new max value exceeds 500, update maxValue
-      if (newValue > 500) {
-        setMaxValue(newValue);
-      } else if (newValue <= 500) {
-        // If max goes back below 500, reset maxValue to 500 unless the min value is above 500
-        setMaxValue(Math.max(500, priceRange[0]));
-      }
-    }
-
-    // Update price range with the new values
-    setPriceRange(updatedPriceRange);
+  // Calculate dynamic slider range based on current values
+  const getSliderRange = () => {
+    const maxInputValue = value[1] ?? 0;
+    const minRange = 500;
+    return Math.max(minRange, Math.ceil(maxInputValue + 100));
   };
 
-  // Return null on the server to prevent any rendering during SSR
-  if (!mounted) {
-    return null;
-  }
+  useEffect(() => {
+    setMounted(true);
+    setTempInputs([value[0]?.toString() ?? "", value[1]?.toString() ?? ""]);
+  }, [value]);
+
+  const getSliderValue = (): [number, number] => {
+    const currentRange = getSliderRange();
+    return [value[0] ?? 0, value[1] ?? currentRange];
+  };
+
+  const handleSliderChange = (newValue: number | number[]) => {
+    const values = Array.isArray(newValue) ? newValue : [newValue, newValue];
+    const currentRange = getSliderRange();
+
+    // Ensure values don't exceed MAX_PRICE
+    const clampedValues: [number | undefined, number | undefined] = [
+      Math.min(values[0], MAX_PRICE) || undefined,
+      values[1] === currentRange
+        ? undefined
+        : Math.min(values[1], MAX_PRICE) || undefined,
+    ];
+
+    onChange(clampedValues);
+  };
+
+  const handleInputChange = (index: number, inputValue: string) => {
+    const newTempInputs = [...tempInputs] as [string, string];
+    // Only allow numbers up to MAX_PRICE
+    if (inputValue === "" || Number(inputValue) <= MAX_PRICE) {
+      newTempInputs[index] = inputValue;
+      setTempInputs(newTempInputs);
+    }
+  };
+
+  const handleInputCommit = (index: number) => {
+    const newValue =
+      tempInputs[index] === "" ? undefined : Number(tempInputs[index]);
+    const updatedValue = [...value] as [number | undefined, number | undefined];
+
+    // Clamp the value to MAX_PRICE
+    updatedValue[index] =
+      newValue === undefined ? undefined : Math.min(newValue, MAX_PRICE);
+
+    // Apply min/max validation only after commit
+    if (updatedValue[0] !== undefined && updatedValue[1] !== undefined) {
+      if (updatedValue[1] < updatedValue[0]) {
+        updatedValue[1] = updatedValue[0];
+        setTempInputs((prev) => [prev[0], updatedValue[0]?.toString() ?? ""]);
+      }
+    }
+
+    onChange(updatedValue);
+  };
+
+  if (!mounted) return null;
 
   return (
     <>
       <Slider
         label="Price Range"
         minValue={0}
-        maxValue={maxValue} // Dynamically set max value
+        maxValue={getSliderRange()}
         step={1}
-        value={priceRange}
-        defaultValue={[0, 0]}
-        onChange={(value) =>
-          setPriceRange(Array.isArray(value) ? value : [value, value])
-        }
+        value={getSliderValue()}
+        onChange={handleSliderChange}
+        onChangeEnd={() => setIsDragging(false)}
         formatOptions={{ style: "currency", currency: "USD" }}
         classNames={{
           base: "gap-3",
@@ -84,8 +106,8 @@ export default function PriceRangeSlider() {
               className="w-[230px] px-1.5 text-tiny text-default-600 rounded-small"
               content={
                 <div className="text-left">
-                  <p>The price range your monitor will search for.</p>
-                  <p>Leave both min and max at 0 for any.</p>
+                  <p>Set your desired price range.</p>
+                  <p>Leave fields empty for no limit.</p>
                 </div>
               }
               placement="right"
@@ -99,6 +121,7 @@ export default function PriceRangeSlider() {
         renderThumb={({ index, ...props }) => (
           <div
             {...props}
+            onMouseDown={() => setIsDragging(true)}
             className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
           >
             <span
@@ -113,12 +136,14 @@ export default function PriceRangeSlider() {
         )}
         renderValue={() => (
           <div className="flex gap-2">
-            {/* Min Price Input */}
             <Input
               label="Min"
               size="sm"
-              value={String(priceRange[0])} // Convert number to string
-              onChange={(e) => handlePriceInputChange(0, e.target.value)}
+              value={tempInputs[0]}
+              placeholder="-"
+              onChange={(e) => handleInputChange(0, e.target.value)}
+              onBlur={() => handleInputCommit(0)}
+              onKeyDown={(e) => e.key === "Enter" && handleInputCommit(0)}
               type="number"
               labelPlacement="outside"
               classNames={{
@@ -127,20 +152,20 @@ export default function PriceRangeSlider() {
                 input: "max-w-24 text-default-600",
               }}
               variant="bordered"
-              isClearable={false}
-              fullWidth={false}
               startContent={
                 <div className="pointer-events-none flex items-center">
                   <span className="text-default-400 text-small">$</span>
                 </div>
               }
             />
-
             <Input
               label="Max"
               size="sm"
-              value={String(priceRange[1])} // Convert number to string
-              onChange={(e) => handlePriceInputChange(1, e.target.value)}
+              value={tempInputs[1]}
+              placeholder="-"
+              onChange={(e) => handleInputChange(1, e.target.value)}
+              onBlur={() => handleInputCommit(1)}
+              onKeyDown={(e) => e.key === "Enter" && handleInputCommit(1)}
               type="number"
               labelPlacement="outside"
               classNames={{
@@ -149,8 +174,6 @@ export default function PriceRangeSlider() {
                 input: "max-w-24 text-default-600",
               }}
               variant="bordered"
-              isClearable={false}
-              fullWidth={false}
               startContent={
                 <div className="pointer-events-none flex items-center">
                   <span className="text-default-400 text-small">$</span>

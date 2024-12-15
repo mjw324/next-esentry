@@ -6,11 +6,13 @@ import { Input, Chip } from "@nextui-org/react";
 interface KeywordsInputProps {
   keywords: string[];
   setKeywords: (keywords: string[]) => void;
+  error?: string;
 }
 
 export default function KeywordsInput({
   keywords,
   setKeywords,
+  error,
 }: KeywordsInputProps) {
   const [keywordInput, setKeywordInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -81,6 +83,8 @@ export default function KeywordsInput({
         onChange={(e) => setKeywordInput(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur} // Add the current input as a keyword when input loses focus
+        isInvalid={!!error}
+        errorMessage={error}
         classNames={{
           inputWrapper: "flex flex-wrap gap-2 pt-1 pb-1",
           input: "flex-auto w-auto",

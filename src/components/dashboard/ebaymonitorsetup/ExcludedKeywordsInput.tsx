@@ -6,11 +6,13 @@ import { Input, Chip } from "@nextui-org/react";
 interface ExcludedKeywordsInputProps {
   excludedKeywords: string[];
   setExcludedKeywords: (excludedKeywords: string[]) => void;
+  error?: string;
 }
 
 export default function ExcludedKeywordsInput({
   excludedKeywords,
   setExcludedKeywords,
+  error,
 }: ExcludedKeywordsInputProps) {
   const [keywordInput, setKeywordInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -78,6 +80,8 @@ export default function ExcludedKeywordsInput({
         onChange={(e) => setKeywordInput(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur} // Add the current input as an excluded keyword when input loses focus
+        isInvalid={!!error} // Add error state
+        errorMessage={error} // Add error message
         classNames={{
           inputWrapper: "flex flex-wrap gap-2 pt-1 pb-1",
           input: "flex-auto w-auto",
