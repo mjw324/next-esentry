@@ -29,6 +29,8 @@ const ThemeChanger = () => {
         className="rounded-full focus:outline-none focus-visible:ring focus-visible:ring-gray-100 focus:ring-opacity-20 text-2xl dark:text-white text-black"
         placeholder="Toggle theme"
         aria-label="Toggle theme"
+        onPointerEnterCapture={() => {}}
+        onPointerLeaveCapture={() => {}}
       />
     </div>
   );
