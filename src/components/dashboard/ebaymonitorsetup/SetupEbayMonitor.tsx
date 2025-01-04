@@ -9,7 +9,7 @@ interface SetupEbayMonitorProps {
   initialKeywords?: string[];
   initialExcludedKeywords?: string[];
   initialCondition?: string[];
-  initialSeller?: string;
+  initialSellers?: string[];
   initialMinPrice?: number;
   initialMaxPrice?: number;
 }
@@ -19,7 +19,7 @@ export default function SetupEbayMonitor({
   initialKeywords = [],
   initialExcludedKeywords = [],
   initialCondition = [],
-  initialSeller = "",
+  initialSellers = [],
   initialMinPrice = 0,
   initialMaxPrice = 0,
 }: SetupEbayMonitorProps) {
@@ -29,7 +29,7 @@ export default function SetupEbayMonitor({
     <>
       <Button
         onPress={onOpen}
-        className="px-4 py-4 text-sm font-semibold text-center text-white bg-emerald-600 rounded-md"
+        className="px-4 py-4 text-sm font-semibold text-center text-white bg-success rounded-md"
       >
         {isDemo ? "Try Setting Up This Monitor" : "Set up eBay Monitor"}
       </Button>
@@ -41,7 +41,7 @@ export default function SetupEbayMonitor({
         initialKeywords={initialKeywords}
         initialExcludedKeywords={initialExcludedKeywords}
         initialCondition={initialCondition}
-        initialSeller={initialSeller}
+        initialSellers={initialSellers}
         minPrice={initialMinPrice}
         maxPrice={initialMaxPrice}
       />

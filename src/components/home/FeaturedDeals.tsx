@@ -12,22 +12,22 @@ const deals = [
     image: "/img/iphone_15_pro.png",
     msrp: 1099,
     discountPrice: 700,
-    initialKeywords: ["iPhone", "15 Pro", "Apple"],
-    initialExcludedKeywords: ["Used", "Refurbished"],
+    initialKeywords: ["iPhone", "15", "Pro", "Apple"],
+    initialExcludedKeywords: ["Max", "Used", "Refurbished"],
     initialCondition: [],
-    initialSeller: "",
+    initialSellers: [],
     initialMinPrice: 400,
     initialMaxPrice: 900,
   },
   {
-    name: "Nintendo Switch",
+    name: "Nintendo Switch OLED",
     image: "/img/nintendo_switch.png",
     msrp: 299,
     discountPrice: 120,
-    initialKeywords: ["Nintendo", "Switch"],
+    initialKeywords: ["Nintendo", "Switch", "OLED"],
     initialExcludedKeywords: ["Broken", "Parts"],
     initialCondition: ["used", "openBox"],
-    initialSeller: "",
+    initialSellers: [],
     initialMinPrice: 80,
     initialMaxPrice: 150,
   },
@@ -36,10 +36,10 @@ const deals = [
     image: "/img/aj1_hyper_royal_1.png",
     msrp: 170,
     discountPrice: 110,
-    initialKeywords: ["Air Jordan", "1", "Hyper Royal"],
+    initialKeywords: ["Air", "Jordan", "1", "Hyper", "Royal"],
     initialExcludedKeywords: ["Replica", "Fake", "Used"],
     initialCondition: ["used", "openBox"],
-    initialSeller: "",
+    initialSellers: [],
     initialMinPrice: 50,
     initialMaxPrice: 150,
   },
@@ -51,7 +51,7 @@ const deals = [
     initialKeywords: ["Zodiac", "Olympos", "Watch"],
     initialExcludedKeywords: ["Damaged", "Replica"],
     initialCondition: ["used", "openBox"],
-    initialSeller: "",
+    initialSellers: ["WatchesOnline"],
     initialMinPrice: 300,
     initialMaxPrice: 700,
   },
@@ -162,7 +162,7 @@ export const FeaturedDeals = () => {
                 />
 
                 {/* Price Badge */}
-                <div className="absolute top-0 right-10 bg-gradient-to-tr dark:to-green-600 dark:from-cyan-600 to-green-400 from-cyan-400 dark:text-white text-black font-medium px-4 py-2 rounded-full shadow-md flex flex-col items-center">
+                <div className="absolute top-0 right-10 bg-gradient-to-tr dark:from-primary dark:to-success to-success-300 from-primary-300 dark:text-white text-black font-medium px-4 py-2 rounded-full shadow-md flex flex-col items-center">
                   <span className="text-sm line-through opacity-75">
                     ${deals[currentIndex].msrp}
                   </span>
@@ -184,7 +184,7 @@ export const FeaturedDeals = () => {
                     deals[currentIndex].initialExcludedKeywords
                   }
                   initialCondition={deals[currentIndex].initialCondition}
-                  initialSeller={deals[currentIndex].initialSeller}
+                  initialSellers={deals[currentIndex].initialSellers}
                   initialMinPrice={deals[currentIndex].initialMinPrice}
                   initialMaxPrice={deals[currentIndex].initialMaxPrice}
                 />

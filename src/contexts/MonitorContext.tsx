@@ -5,12 +5,12 @@ import React, { createContext, useContext, useState } from "react";
 export interface Monitor {
   id: string;
   keywords: string[];
-  excludedKeywords: string[];
-  seller?: string;
   isActive: boolean;
+  excludedKeywords?: string[];
+  sellers?: string[];
   minPrice?: number;
   maxPrice?: number;
-  condition: string[];
+  condition?: string[];
 }
 
 interface MonitorContextType {

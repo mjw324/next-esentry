@@ -6,3 +6,102 @@
 
 @layer base {
 }
+
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0turn;
+}
+
+@keyframes borderRotate {
+  0% { --border-angle: 0turn; }
+  25% { --border-angle: 0.15turn; }
+  45% { --border-angle: 0.5turn; }
+  50% { --border-angle: 0.75turn; }
+  75% { --border-angle: 0.85turn; }
+  100% { --border-angle: 1turn; }
+}
+.ebay-gradient-border {
+  position: relative;
+  border-bottom-width: 2px;
+}
+
+/* Light mode - Active state */
+.ebay-gradient-border.active {
+  border-image: conic-gradient(
+    from var(--border-angle),
+    #e53238,
+    #0064d2,
+    #f5af02,
+    #86b817,
+    #e53238
+  ) 1;
+  animation: borderRotate 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Light mode - Inactive state */
+.ebay-gradient-border.inactive {
+  border-image: linear-gradient(
+    to right,
+    rgba(229, 50, 56, 0.4),
+    rgba(0, 100, 210, 0.4),
+    rgba(245, 175, 2, 0.4),
+    rgba(134, 184, 23, 0.4)
+  ) 1;
+}
+
+/* Light mode - Active state after element */
+.ebay-gradient-border.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    #e53238,
+    #0064d2,
+    #f5af02,
+    #86b817
+  );
+  opacity: 0.9;
+  pointer-events: none;
+  filter: saturate(1.2) brightness(1.1);
+}
+
+/* Light mode - Inactive state after element */
+.ebay-gradient-border.inactive::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    rgba(229, 50, 56, 0.4),
+    rgba(0, 100, 210, 0.4),
+    rgba(245, 175, 2, 0.4),
+    rgba(134, 184, 23, 0.4)
+  );
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Dark mode adjustments */
+:root[class~="dark"] .ebay-gradient-border.active::after {
+  opacity: 0.7;
+  filter: none;
+}
+
+:root[class~="dark"] .ebay-gradient-border.inactive::after {
+  opacity: 0.4;
+  background: linear-gradient(
+    to right,
+    rgba(229, 50, 56, 0.3),
+    rgba(0, 100, 210, 0.3),
+    rgba(245, 175, 2, 0.3),
+    rgba(134, 184, 23, 0.3)
+  );
+}

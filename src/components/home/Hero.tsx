@@ -12,20 +12,20 @@ export const Hero = () => {
             Discover Rare eBay Finds Instantly
           </h1>
           <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-            eSentry alerts you via Telegram about new eBay and Amazon listings
-            matching your customized preferences, ensuring you never miss out on
-            the perfect deal.
+            eSentry alerts you about new eBay and Amazon listings matching your
+            customized preferences, ensuring you never miss out on the perfect
+            deal.
           </p>
 
           <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
             <Link href="/register">
-              <Button className="p-8 text-lg font-semibold text-center text-white bg-emerald-600 rounded-md">
+              <Button className="p-8 text-lg font-semibold text-center text-white bg-success rounded-md">
                 Get Started for Free
               </Button>
             </Link>
             <a
               href="https://github.com/mjw324/next-esentry"
-              className="flex items-center space-x-2 text-gray-500 dark:text-gray-400"
+              className="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-[#171515] transition-colors duration-200 dark:hover:text-white"
             >
               <svg
                 role="img"

@@ -31,7 +31,7 @@ export default function MonitorGrid() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 md:gap-12 md:gap-x-14 lg:gap-x-32 gap-8">
       {monitors.map((monitor) => (
         <MonitorTile
           key={monitor.id}
@@ -50,7 +50,7 @@ export default function MonitorGrid() {
         initialKeywords={editingMonitor?.keywords || []}
         initialExcludedKeywords={editingMonitor?.excludedKeywords || []}
         initialCondition={editingMonitor?.condition || []}
-        initialSeller={editingMonitor?.seller || ""}
+        initialSellers={editingMonitor?.sellers || []}
         minPrice={editingMonitor?.minPrice}
         maxPrice={editingMonitor?.maxPrice}
       />

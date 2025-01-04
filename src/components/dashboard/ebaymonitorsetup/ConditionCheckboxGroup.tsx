@@ -17,6 +17,10 @@ export default function ConditionCheckboxGroup({
       orientation="horizontal"
       value={condition}
       onChange={setCondition}
+      classNames={{
+        label:
+          "block text-small font-medium text-foreground flex gap-2 items-center",
+      }}
     >
       <Checkbox value="new">New</Checkbox>
       <Checkbox value="openBox">Open Box</Checkbox>

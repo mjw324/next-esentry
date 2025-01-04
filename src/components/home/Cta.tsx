@@ -6,7 +6,7 @@ import Link from "next/link";
 export const Cta = () => {
   return (
     <Container>
-      <div className="flex flex-wrap items-center justify-between w-full max-w-4xl gap-5 mx-auto text-white bg-emerald-600 px-7 py-7 lg:px-12 lg:py-12 lg:flex-nowrap rounded-xl">
+      <div className="flex flex-wrap items-center justify-between w-full max-w-4xl gap-5 mx-auto text-white bg-success px-7 py-7 lg:px-12 lg:py-12 lg:flex-nowrap rounded-xl">
         <div className="flex-grow text-center lg:text-left">
           <h2 className="text-2xl font-medium lg:text-3xl">
             Ready to use eSentry?
@@ -18,7 +18,7 @@ export const Cta = () => {
         </div>
         <div className="flex-shrink-0 w-full text-center lg:w-auto">
           <Link href="/register">
-            <Button className="p-8 text-lg font-semibold text-center bg-white text-emerald-600 rounded-md">
+            <Button className="p-8 text-lg font-semibold text-center bg-white text-success rounded-md">
               Register
             </Button>
           </Link>

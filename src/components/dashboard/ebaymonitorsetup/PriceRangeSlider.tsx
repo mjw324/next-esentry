@@ -14,70 +14,110 @@ export default function PriceRangeSlider({
 }: PriceRangeSliderProps) {
   const [mounted, setMounted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [tempInputs, setTempInputs] = useState<[string, string]>(["", ""]);
+  const [tempInputs, setTempInputs] = useState<[string, string]>([
+    value[0]?.toString() ?? "",
+    value[1]?.toString() ?? "",
+  ]);
   const MAX_PRICE = 100000;
 
-  // Calculate dynamic slider range based on current values
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      const newTempInputs: [string, string] = [
+        value[0]?.toString() ?? "",
+        value[1]?.toString() ?? "",
+      ];
+      setTempInputs(newTempInputs);
+    }
+  }, [value, mounted]);
+
   const getSliderRange = () => {
     const maxInputValue = value[1] ?? 0;
     const minRange = 500;
     return Math.max(minRange, Math.ceil(maxInputValue + 100));
   };
 
-  useEffect(() => {
-    setMounted(true);
-    setTempInputs([value[0]?.toString() ?? "", value[1]?.toString() ?? ""]);
-  }, [value]);
-
   const getSliderValue = (): [number, number] => {
     const currentRange = getSliderRange();
-    return [value[0] ?? 0, value[1] ?? currentRange];
+    const minValue = value[0] ?? 0;
+    const maxValue = value[1] ?? currentRange;
+
+    // Ensure slider thumbs respect min/max relationship
+    if (minValue > maxValue) {
+      return [maxValue, maxValue];
+    }
+    return [minValue, maxValue];
   };
 
   const handleSliderChange = (newValue: number | number[]) => {
+    if (!mounted) return;
+
     const values = Array.isArray(newValue) ? newValue : [newValue, newValue];
     const currentRange = getSliderRange();
 
-    // Ensure values don't exceed MAX_PRICE
-    const clampedValues: [number | undefined, number | undefined] = [
-      Math.min(values[0], MAX_PRICE) || undefined,
-      values[1] === currentRange
-        ? undefined
-        : Math.min(values[1], MAX_PRICE) || undefined,
+    let clampedValues: [number | undefined, number | undefined] = [
+      values[0] === 0 ? undefined : Math.min(values[0], MAX_PRICE),
+      values[1] === currentRange ? undefined : Math.min(values[1], MAX_PRICE),
     ];
 
-    onChange(clampedValues);
+    // Ensure min doesn't exceed max and max doesn't go below min
+    if (clampedValues[0] !== undefined && clampedValues[1] !== undefined) {
+      if (clampedValues[0] > clampedValues[1]) {
+        clampedValues = [clampedValues[1], clampedValues[1]];
+      }
+    }
+
+    if (JSON.stringify(clampedValues) !== JSON.stringify(value)) {
+      onChange(clampedValues);
+    }
   };
 
   const handleInputChange = (index: number, inputValue: string) => {
-    const newTempInputs = [...tempInputs] as [string, string];
-    // Only allow numbers up to MAX_PRICE
     if (inputValue === "" || Number(inputValue) <= MAX_PRICE) {
+      const newTempInputs = [...tempInputs] as [string, string];
       newTempInputs[index] = inputValue;
       setTempInputs(newTempInputs);
     }
   };
 
   const handleInputCommit = (index: number) => {
+    if (!mounted) return;
+
     const newValue =
       tempInputs[index] === "" ? undefined : Number(tempInputs[index]);
     const updatedValue = [...value] as [number | undefined, number | undefined];
-
-    // Clamp the value to MAX_PRICE
     updatedValue[index] =
       newValue === undefined ? undefined : Math.min(newValue, MAX_PRICE);
 
-    // Apply min/max validation only after commit
-    if (updatedValue[0] !== undefined && updatedValue[1] !== undefined) {
-      if (updatedValue[1] < updatedValue[0]) {
-        updatedValue[1] = updatedValue[0];
-        setTempInputs((prev) => [prev[0], updatedValue[0]?.toString() ?? ""]);
-      }
+    // Handle min > max
+    if (
+      index === 0 && // Only for min value changes
+      updatedValue[0] !== undefined &&
+      updatedValue[1] !== undefined &&
+      updatedValue[0] > updatedValue[1]
+    ) {
+      updatedValue[0] = updatedValue[1];
+      setTempInputs([updatedValue[1].toString(), tempInputs[1]]);
     }
 
-    onChange(updatedValue);
-  };
+    // Handle max < min
+    if (
+      index === 1 && // Only for max value changes
+      updatedValue[0] !== undefined &&
+      updatedValue[1] !== undefined &&
+      updatedValue[1] < updatedValue[0]
+    ) {
+      updatedValue[1] = updatedValue[0];
+      setTempInputs([tempInputs[0], updatedValue[0].toString()]);
+    }
 
+    if (JSON.stringify(updatedValue) !== JSON.stringify(value)) {
+      onChange(updatedValue);
+    }
+  };
   if (!mounted) return null;
 
   return (
@@ -94,16 +134,16 @@ export default function PriceRangeSlider({
         classNames={{
           base: "gap-3",
           filler:
-            "bg-gradient-to-r from-cyan-300 to-green-300 dark:from-cyan-600 dark:to-green-800",
+            "bg-gradient-to-r from-primary-300 to-success-300 dark:from-primary-600 dark:to-success-800",
         }}
         renderLabel={({ children, ...props }) => (
           <label
             {...props}
-            className="text-medium text-default-600 flex gap-2 items-center"
+            className="block text-small font-medium text-foreground flex gap-2 items-center"
           >
             {children}
             <Tooltip
-              className="w-[230px] px-1.5 text-tiny text-default-600 rounded-small"
+              className="w-[230px] px-1.5 text-small text-default-600 rounded-small"
               content={
                 <div className="text-left">
                   <p>Set your desired price range.</p>
@@ -112,7 +152,7 @@ export default function PriceRangeSlider({
               }
               placement="right"
             >
-              <span className="transition-opacity opacity-80 hover:opacity-100">
+              <span className="transition-opacity opacity-60 hover:opacity-100">
                 <InfoIcon />
               </span>
             </Tooltip>
@@ -128,8 +168,8 @@ export default function PriceRangeSlider({
               className={cn(
                 "transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75",
                 index === 0
-                  ? "bg-gradient-to-br from-cyan-300 to-cyan-800"
-                  : "bg-gradient-to-br from-green-300 to-green-800"
+                  ? "bg-gradient-to-br from-primary-300 to-primary-800"
+                  : "bg-gradient-to-br from-success-400 to-success-900"
               )}
             />
           </div>

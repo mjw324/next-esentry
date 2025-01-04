@@ -12,10 +12,8 @@ import {
   Divider,
 } from "@nextui-org/react";
 import PriceRangeSlider from "./PriceRangeSlider";
-import KeywordsInput from "./KeywordsInput";
-import ExcludedKeywordsInput from "./ExcludedKeywordsInput";
+import ChipInput from "./ChipInput";
 import ConditionCheckboxGroup from "./ConditionCheckboxGroup";
-import SellerInput from "./SellerInput";
 import { useMonitors } from "@/contexts/MonitorContext";
 
 interface EbayMonitorModalProps {
@@ -25,21 +23,19 @@ interface EbayMonitorModalProps {
   initialKeywords?: string[];
   initialExcludedKeywords?: string[];
   initialCondition?: string[];
-  initialSeller?: string;
+  initialSellers?: string[];
   minPrice?: number;
   maxPrice?: number;
 }
 
 interface MonitorData {
   keywords: string[];
-  excludedKeywords: string[];
-  condition: string[];
-  seller: string;
+  excludedKeywords?: string[];
+  condition?: string[];
+  sellers?: string[];
   minPrice?: number;
   maxPrice?: number;
 }
-
-// Base Modal Component without context dependency
 function BaseEbayMonitorModal({
   isOpen,
   onOpenChange,
@@ -47,7 +43,7 @@ function BaseEbayMonitorModal({
   initialKeywords = [],
   initialExcludedKeywords = [],
   initialCondition = [],
-  initialSeller = "",
+  initialSellers = [],
   minPrice,
   maxPrice,
   onSave,
@@ -57,13 +53,33 @@ function BaseEbayMonitorModal({
     initialExcludedKeywords
   );
   const [condition, setCondition] = useState<string[]>(initialCondition);
-  const [seller, setSeller] = useState(initialSeller);
+  const [sellers, setSellers] = useState<string[]>(initialSellers);
   const [priceRange, setPriceRange] = useState<
     [number | undefined, number | undefined]
   >([minPrice, maxPrice]);
   const [loading, setLoading] = useState(false);
   const [keywordError, setKeywordError] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string>("");
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setKeywords(initialKeywords);
+    setExcludedKeywords(initialExcludedKeywords);
+    setCondition(initialCondition);
+    setSellers(initialSellers);
+    setPriceRange([minPrice, maxPrice]);
+    setKeywordError("");
+    setDuplicateError("");
+  }, [
+    isOpen,
+    initialKeywords,
+    initialExcludedKeywords,
+    initialCondition,
+    initialSellers,
+    minPrice,
+    maxPrice,
+  ]);
 
   const validateMonitor = (): boolean => {
     let isValid = true;
@@ -92,16 +108,14 @@ function BaseEbayMonitorModal({
   };
 
   const handleSaveMonitor = () => {
-    if (!validateMonitor()) {
-      return;
-    }
+    if (!validateMonitor()) return;
 
     setLoading(true);
     const monitorData = {
       keywords,
       excludedKeywords,
       condition,
-      seller,
+      sellers,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
     };
@@ -119,26 +133,6 @@ function BaseEbayMonitorModal({
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      setKeywords(initialKeywords);
-      setExcludedKeywords(initialExcludedKeywords);
-      setCondition(initialCondition);
-      setSeller(initialSeller);
-      setPriceRange([minPrice, maxPrice]);
-      setKeywordError("");
-      setDuplicateError("");
-    }
-  }, [
-    isOpen,
-    initialKeywords,
-    initialExcludedKeywords,
-    initialCondition,
-    initialSeller,
-    minPrice,
-    maxPrice,
-  ]);
-
   return (
     <Modal
       backdrop="blur"
@@ -147,7 +141,7 @@ function BaseEbayMonitorModal({
       radius="lg"
       classNames={{
         body: "py-6 overflow-hidden",
-        base: "border-none bg-white/90 dark:bg-gray-900/90 text-white shadow-xl backdrop-blur-lg",
+        base: "border-none bg-gray-50/80 dark:bg-neutral-900/90 text-white shadow-xl backdrop-blur-lg overflow-hidden",
         header: "border-b border-zinc-300 dark:border-zinc-700",
         footer: "border-t border-zinc-300 dark:border-zinc-700",
       }}
@@ -165,40 +159,37 @@ function BaseEbayMonitorModal({
               </p>
             </ModalHeader>
 
-            <ModalBody>
-              <Spacer y={1} />
-              <KeywordsInput
-                keywords={keywords}
-                setKeywords={setKeywords}
+            <ModalBody className="pt-3">
+              <ChipInput
+                label="Keywords"
+                values={keywords}
+                setValues={setKeywords}
                 error={keywordError}
+                chipColor="success"
               />
-
               <Divider />
-
-              <Spacer y={1} />
-              <ExcludedKeywordsInput
-                excludedKeywords={excludedKeywords}
-                setExcludedKeywords={setExcludedKeywords}
+              <ChipInput
+                label="Excluded Keywords"
+                values={excludedKeywords}
+                setValues={setExcludedKeywords}
                 error={duplicateError}
+                chipColor="danger"
               />
-
               <Divider />
 
-              <Spacer y={4} />
               <PriceRangeSlider value={priceRange} onChange={setPriceRange} />
-
               <Divider />
-
-              <Spacer y={1} />
               <ConditionCheckboxGroup
                 condition={condition}
                 setCondition={setCondition}
               />
-
               <Divider />
-
-              <Spacer y={1} />
-              <SellerInput seller={seller} setSeller={setSeller} />
+              <ChipInput
+                label="Seller(s)"
+                values={sellers}
+                setValues={setSellers}
+                chipColor="primary"
+              />
             </ModalBody>
 
             <ModalFooter>
