@@ -1,5 +1,5 @@
 // components/dashboard/monitors/AddMonitorTile.tsx
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody } from "@heroui/react";
 import { Plus } from "lucide-react";
 
 interface AddMonitorTileProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckboxGroup, Checkbox } from "@nextui-org/react";
+import { CheckboxGroup, Checkbox } from "@heroui/react";
 
 interface ConditionCheckboxGroupProps {
   condition: string[];

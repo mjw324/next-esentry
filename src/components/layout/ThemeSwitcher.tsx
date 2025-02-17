@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import "@theme-toggles/react/css/Expand.css";
 import { Expand } from "@theme-toggles/react";
-import { Skeleton } from "@nextui-org/react";
+import { Skeleton } from "@heroui/react";
 
 const ThemeChanger = () => {
   const [mounted, setMounted] = useState(false);
@@ -22,15 +21,14 @@ const ThemeChanger = () => {
 
   return (
     <div className="flex items-center">
+      {/*@ts-ignore*/}
       <Expand
         toggled={isDarkTheme}
         toggle={() => setTheme(isDarkTheme ? "light" : "dark")}
-        duration={750}
         className="rounded-full focus:outline-none focus-visible:ring focus-visible:ring-gray-100 focus:ring-opacity-20 text-2xl dark:text-white text-black"
-        placeholder="Toggle theme"
         aria-label="Toggle theme"
-        onPointerEnterCapture={() => {}}
-        onPointerLeaveCapture={() => {}}
+        title="Toggle theme"
+        forceMotion={true}
       />
     </div>
   );

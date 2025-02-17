@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Slider, Tooltip, Input } from "@nextui-org/react";
+import { Slider, Tooltip, Input } from "@heroui/react";
 import InfoIcon from "@/svg_components/InfoIcon";
 import cn from "@/utils/cn";
 

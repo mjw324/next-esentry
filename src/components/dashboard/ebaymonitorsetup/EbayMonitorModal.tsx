@@ -10,7 +10,7 @@ import {
   Button,
   Spacer,
   Divider,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import PriceRangeSlider from "./PriceRangeSlider";
 import ChipInput from "./ChipInput";
 import ConditionCheckboxGroup from "./ConditionCheckboxGroup";

@@ -1,4 +1,3 @@
-// app/page.tsx
 import { Container } from "@/components/home/Container";
 import { Hero } from "@/components/home/Hero";
 import { SectionTitle } from "@/components/home/SectionTitle";
@@ -13,7 +12,6 @@ export default function Home() {
     <Container>
       <Hero />
 
-      {/* New Section for the Mock Demo */}
       <SectionTitle
         preTitle="Try It Yourself"
         title="Simple Setup in Just a Few Clicks"
@@ -22,7 +20,6 @@ export default function Home() {
         eSentry. Try our interactive demo below!
       </SectionTitle>
 
-      {/* Include FeaturedDeals component */}
       <FeaturedDeals />
 
       <SectionTitle

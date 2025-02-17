@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 
 interface ChipInputProps {
   label: string;

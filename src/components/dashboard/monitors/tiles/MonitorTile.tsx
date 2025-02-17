@@ -5,7 +5,7 @@ import {
   CardHeader,
   Chip,
   Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import {
   Play,
   Pause,

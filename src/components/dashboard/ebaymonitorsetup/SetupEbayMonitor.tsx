@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
-import { useDisclosure } from "@nextui-org/react";
+import { Button } from "@heroui/react";
+import { useDisclosure } from "@heroui/react";
 import EbayMonitorModal from "./EbayMonitorModal";
 
 interface SetupEbayMonitorProps {

@@ -1,7 +1,8 @@
 "use client";
 
-import { NextUIProvider } from "@nextui-org/react";
+import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { SessionProvider } from "next-auth/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -10,7 +11,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
       defaultTheme="system"
       enableSystem={true}
     >
-      <NextUIProvider>{children}</NextUIProvider>
+      <HeroUIProvider>
+        <SessionProvider>{children}</SessionProvider>
+      </HeroUIProvider>
     </NextThemesProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Container } from "@/components/home/Container";
-import { Accordion, AccordionItem } from "@nextui-org/react";
+import { Accordion, AccordionItem } from "@heroui/react";
 import { motion } from "framer-motion";
 
 export const Faq = () => {

@@ -1,5 +1,4 @@
 "use client";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   Button,
@@ -7,24 +6,14 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { useSession } from "next-auth/react";
 import ThemeChanger from "@/components/layout/ThemeSwitcher";
 import Image from "next/image";
-import { HamburgerIcon } from "@/svg_components/HamburgerIcon";
-import { useState, useEffect } from "react";
+import { NavbarDropdown } from "./NavbarDropdown";
 
-export const Navbar = () => {
-  const pathname = usePathname();
-  const [opened, setOpened] = useState(false);
-  const [isDashboard, setIsDashboard] = useState(false);
-
-  useEffect(() => {
-    setIsDashboard(pathname.startsWith("/dashboard"));
-  }, [pathname]);
+export function Navbar() {
+  const { data: session } = useSession();
 
   return (
     <NextUINavbar
@@ -37,7 +26,7 @@ export const Navbar = () => {
     >
       {/* Brand section */}
       <NavbarBrand>
-        <Link href={isDashboard ? "/dashboard" : "/"}>
+        <Link href="/">
           <Image
             className="block dark:hidden"
             src="/img/esentry-name-icon-light.svg"
@@ -54,13 +43,18 @@ export const Navbar = () => {
           />
         </Link>
       </NavbarBrand>
+
       {/* Navbar Content */}
-      <NavbarContent justify="end">
-        {/* Theme Switcher */}
+      <NavbarContent justify="end" className="gap-4">
         <NavbarItem>
           <ThemeChanger />
         </NavbarItem>
-        {!isDashboard && (
+
+        {session ? (
+          <NavbarItem>
+            <NavbarDropdown />
+          </NavbarItem>
+        ) : (
           <>
             <NavbarItem>
               <Link href="/login">
@@ -81,4 +75,4 @@ export const Navbar = () => {
       </NavbarContent>
     </NextUINavbar>
   );
-};
+}

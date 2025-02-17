@@ -13,7 +13,18 @@ export const metadata: Metadata = {
   description:
     "eSentry helps you stay ahead by providing real-time alerts for eBay and Amazon listings that match your preferences, ensuring you never miss out on the perfect deal.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/favicon.ico",
+        href: "/favicon.ico",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/favicon-dark.ico",
+        href: "/favicon-dark.ico",
+      },
+    ],
   },
 };
 
@@ -23,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // Supress hydration warning for the theme changer
+    // Supress hydration warning for the theme changer, this only supresses hydration warnings for this depth
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <Providers>

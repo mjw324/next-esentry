@@ -1,4 +1,3 @@
-"use client";
 import MonitorGrid from "@/components/dashboard/monitors/tiles/MonitorGrid";
 
 import { MonitorProvider } from "@/contexts/MonitorContext";
