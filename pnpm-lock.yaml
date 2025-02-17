@@ -30,8 +30,8 @@ importers:
         specifier: 2.6.14
         version: 2.6.14(@types/react@19.0.9)(framer-motion@11.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.17)
       '@mjw324/prisma-shared':
-        specifier: ^1.0.6
-        version: 1.0.6(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
+        specifier: ^1.0.7
+        version: 1.0.7(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
       '@prisma/client':
         specifier: ^6.3.1
         version: 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
@@ -1016,8 +1016,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@mjw324/prisma-shared@1.0.6':
-    resolution: {integrity: sha512-iVz+fcl2o1SKCsIPv+MHGOqCf26nwgnFF4aCJlMVdZWKsUpA0CjN9n0JLdQgC+4u/sLupirZ4TC87kW0P8oOdA==}
+  '@mjw324/prisma-shared@1.0.7':
+    resolution: {integrity: sha512-WpE46r+lu5NWD6ig+f05NjOWtoliWwy3uyxV8ht3vBOgvVvk6EzQaM5YZ3/Q6XLLtpe5r4wLQLfDT9NOPxstag==}
 
   '@next/env@15.1.3':
     resolution: {integrity: sha512-Q1tXwQCGWyA3ehMph3VO+E6xFPHDKdHFYosadt0F78EObYxPio0S09H9UGYznDe6Wc8eLKLG89GqcFJJDiK5xw==}
@@ -4801,7 +4801,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@mjw324/prisma-shared@1.0.6(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)':
+  '@mjw324/prisma-shared@1.0.7(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
       '@prisma/client': 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
     transitivePeerDependencies:
