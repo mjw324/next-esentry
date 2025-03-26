@@ -11,16 +11,18 @@ import {
   User,
 } from "@heroui/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function NavbarDropdown() {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   return (
     <Dropdown placement="bottom-end">
       <DropdownTrigger>
         <User
           avatarProps={{
-            src: session?.user?.image ?? "",
+            src: session?.user?.image ?? "/img/user.png",
             isBordered: true,
             size: "sm",
             color: "primary",
@@ -36,11 +38,17 @@ export function NavbarDropdown() {
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">{session?.user?.email}</p>
         </DropdownItem>
-        <DropdownItem key="dashboard">
+        <DropdownItem 
+          key="dashboard" 
+          className={pathname === "/dashboard" ? "bg-primary-200 text-primary-600 font-medium" : ""}
+        >
           <Link href="/dashboard">Dashboard</Link>
         </DropdownItem>
-        <DropdownItem key="settings">
-          <Link href="/dashboard/settings">Settings</Link>
+        <DropdownItem 
+          key="settings" 
+          className={pathname === "/dashboard/preferences" ? "bg-secondary-200 text-secondary-600 font-medium" : ""}
+        >
+          <Link href="/dashboard/preferences">Alert Preferences</Link>
         </DropdownItem>
         <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
           Log Out

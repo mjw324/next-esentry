@@ -1,22 +1,18 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@/auth'
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
 
-export default auth((req) => {
-  // Get the pathname of the requested URL
-  const { nextUrl } = req;
-
-  // Skip middleware for static files and API routes
-  if (
-    nextUrl.pathname.includes('.') || // static files
-    nextUrl.pathname.startsWith('/api/') || // API routes
-    nextUrl.pathname.startsWith('/_next/') // Next.js internal routes
-  ) {
-    return NextResponse.next();
-  }
-})
+export const { auth: middleware } = NextAuth(authConfig)
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|public).*)',
   ],
 }

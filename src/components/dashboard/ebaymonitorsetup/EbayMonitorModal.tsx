@@ -36,6 +36,7 @@ interface MonitorData {
   minPrice?: number;
   maxPrice?: number;
 }
+
 function BaseEbayMonitorModal({
   isOpen,
   onOpenChange,
@@ -47,7 +48,11 @@ function BaseEbayMonitorModal({
   minPrice,
   maxPrice,
   onSave,
-}: EbayMonitorModalProps & { onSave?: (data: MonitorData) => void }) {
+  isSubmitting = false,
+}: EbayMonitorModalProps & {
+  onSave?: (data: MonitorData) => void;
+  isSubmitting?: boolean;
+}) {
   const [keywords, setKeywords] = useState<string[]>(initialKeywords);
   const [excludedKeywords, setExcludedKeywords] = useState<string[]>(
     initialExcludedKeywords
@@ -60,6 +65,8 @@ function BaseEbayMonitorModal({
   const [loading, setLoading] = useState(false);
   const [keywordError, setKeywordError] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string>("");
+
+  const isLoading = loading || isSubmitting;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -129,13 +136,11 @@ function BaseEbayMonitorModal({
     } else if (onSave) {
       onSave(monitorData);
       setLoading(false);
-      onOpenChange();
     }
   };
 
   return (
     <Modal
-      backdrop="blur"
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       radius="lg"
@@ -193,15 +198,15 @@ function BaseEbayMonitorModal({
             </ModalBody>
 
             <ModalFooter>
-              <Button variant="light" onPress={onClose}>
+              <Button variant="light" onPress={onClose} isDisabled={isLoading}>
                 Cancel
               </Button>
               <Button
                 color="success"
                 variant="flat"
-                isLoading={loading}
+                isLoading={isLoading}
+                isDisabled={isLoading}
                 onPress={handleSaveMonitor}
-                disabled={loading}
               >
                 {isDemo ? "Save Monitor (Demo)" : "Save Monitor"}
               </Button>
@@ -216,17 +221,37 @@ function BaseEbayMonitorModal({
 // Component that uses the monitor context
 function MonitorModalWithContext(props: EbayMonitorModalProps) {
   const monitorContext = useMonitors();
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSave = (data: MonitorData) => {
-    if (monitorContext.editingMonitor) {
-      monitorContext.updateMonitor(monitorContext.editingMonitor.id, data);
-    } else {
-      monitorContext.addMonitor(data);
+  const handleSave = async (data: MonitorData) => {
+    setSubmitting(true);
+
+    try {
+      if (monitorContext.editingMonitor) {
+        await monitorContext.updateMonitor(
+          monitorContext.editingMonitor.id,
+          data
+        );
+      } else {
+        await monitorContext.addMonitor(data);
+      }
+      setTimeout(() => {
+        props.onOpenChange();
+      }, 0);
+    } catch (err) {
+      // Error toast is already shown in the context
+    } finally {
+      setSubmitting(false);
     }
-    monitorContext.setEditingMonitor(null);
   };
 
-  return <BaseEbayMonitorModal {...props} onSave={handleSave} />;
+  return (
+    <BaseEbayMonitorModal
+      {...props}
+      onSave={handleSave}
+      isSubmitting={submitting}
+    />
+  );
 }
 
 // Wrapper component that handles the context

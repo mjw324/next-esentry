@@ -67,9 +67,9 @@ export const Faq = () => {
 
 const faqdata = [
   {
-    question: "How does eSentry monitor eBay and Amazon listings?",
+    question: "How does eSentry monitor eBaylistings?",
     answer:
-      "eSentry continuously monitors eBay and Amazon listings in real-time, providing you with instant alerts when new products matching your criteria are listed.",
+      "eSentry continuously monitors eBay listings in real-time, providing you with instant alerts when new products matching your criteria are listed.",
   },
   {
     question: "Can I customize the alerts I receive?",
@@ -79,7 +79,7 @@ const faqdata = [
   {
     question: "How do I receive alerts?",
     answer:
-      "You can receive alerts via email or directly through our automated Telegram Bot. Each alert includes detailed information about the listing and a direct link to the product on eBay or Amazon.",
+      "You can receive alerts via email. You can pick which email you want to use, but only one email can be active at a time. Each alert includes detailed information about the listing and a direct link to the product on eBay.",
   },
   {
     question: "Is eSentry free to use?",

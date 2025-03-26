@@ -27,7 +27,7 @@ export default function Home() {
         title="Why eSentry is Your Ultimate Monitoring Tool"
       >
         eSentry helps you stay ahead of the game by providing real-time alerts
-        for eBay and Amazon listings. Customize your monitors, and never miss
+        for eBay listings. Customize your monitors, and never miss
         out on the best deals that match your exact criteria.
       </SectionTitle>
 

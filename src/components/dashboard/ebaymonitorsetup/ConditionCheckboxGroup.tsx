@@ -23,7 +23,6 @@ export default function ConditionCheckboxGroup({
       }}
     >
       <Checkbox value="new">New</Checkbox>
-      <Checkbox value="openBox">Open Box</Checkbox>
       <Checkbox value="used">Used</Checkbox>
     </CheckboxGroup>
   );

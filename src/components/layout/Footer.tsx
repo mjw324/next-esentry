@@ -2,14 +2,14 @@ import Link from "next/link";
 import Image from "next/image";
 import React from "react";
 import { Container } from "@/components/home/Container";
-import SvgGithub from "../../svg_components/Github";
-import SvgLinkedin from "../../svg_components/Linkedin";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function Footer() {
   return (
-    <div className="relative">
-      <Container>
-        <div className="grid max-w-screen-xl grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-3">
+    <Container>
+      <div className="md:px-0 px-6">
+        <div className="grid grid-cols-1 gap-10 pt-10 mx-auto mt-5 border-t border-gray-100 dark:border-trueGray-700 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div>
               <Link href="/">
@@ -25,7 +25,7 @@ export function Footer() {
 
             <div className="max-w-md mt-4 text-gray-500 dark:text-gray-400">
               eSentry helps you stay ahead by providing real-time alerts for
-              eBay and Amazon listings that match your preferences, ensuring you
+              eBay listings that match your preferences, ensuring you
               never miss out on the perfect deal.
             </div>
 
@@ -56,7 +56,10 @@ export function Footer() {
                   className="hover:text-[#171515] transition-colors duration-200 dark:hover:text-white"
                 >
                   <span className="sr-only">GitHub</span>
-                  <SvgGithub className="w-6 h-6" />
+                  <FontAwesomeIcon
+                    icon={faGithub}
+                    className="w-8 h-8"
+                  />
                 </a>
                 <a
                   href="https://www.linkedin.com/in/micah-worth/"
@@ -65,17 +68,19 @@ export function Footer() {
                   className="hover:text-[#0A66C2] transition-colors duration-200"
                 >
                   <span className="sr-only">LinkedIn</span>
-                  <SvgLinkedin className="w-6 h-6" />
+                  <FontAwesomeIcon
+                    icon={faLinkedin}
+                    className="w-8 h-8"
+                  />
                 </a>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400">
-          Copyright © {new Date().getFullYear()}. Made by Micah Worth.
-        </div>
-      </Container>
-    </div>
+      </div>
+      <div className="my-10 text-sm text-center text-gray-600 dark:text-gray-400">
+        Copyright © {new Date().getFullYear()}. Made by Micah Worth.
+      </div>
+    </Container>
   );
 }

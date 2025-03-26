@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Slider, Tooltip, Input } from "@heroui/react";
-import InfoIcon from "@/svg_components/InfoIcon";
 import cn from "@/utils/cn";
+import { Info } from "lucide-react";
+
 
 interface PriceRangeSliderProps {
   value: [number | undefined, number | undefined];
@@ -153,7 +154,7 @@ export default function PriceRangeSlider({
               placement="right"
             >
               <span className="transition-opacity opacity-60 hover:opacity-100">
-                <InfoIcon />
+                <Info className="w-4 h-4" />
               </span>
             </Tooltip>
           </label>

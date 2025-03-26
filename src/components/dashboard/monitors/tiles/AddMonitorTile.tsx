@@ -1,4 +1,3 @@
-// components/dashboard/monitors/AddMonitorTile.tsx
 import { Card, CardBody } from "@heroui/react";
 import { Plus } from "lucide-react";
 
@@ -7,10 +6,11 @@ interface AddMonitorTileProps {
 }
 
 export default function AddMonitorTile({ onClick }: AddMonitorTileProps) {
+
   return (
     <Card
       isPressable
-      onPress={onClick}
+      onPress={() => onClick()}
       className="w-full mx-auto h-full border-2 border-solid bg-transparent hover:bg-default-100"
     >
       <CardBody className="flex items-center justify-center min-h-[140px]">

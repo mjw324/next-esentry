@@ -21,7 +21,7 @@ export function Navbar() {
       isBlurred={true}
       maxWidth="full"
       classNames={{
-        base: "container px-8 mx-auto xl:px-0",
+        base: "container mx-auto xl:px-0",
       }}
     >
       {/* Brand section */}
@@ -58,14 +58,14 @@ export function Navbar() {
           <>
             <NavbarItem>
               <Link href="/login">
-                <Button className="bg-gradient-to-tr dark:to-success-400 dark:from-primary to-success-300 from-primary-300 dark:text-white text-black font-medium shadow-lg">
+                <Button color="primary" className="font-semibold">
                   Login
                 </Button>
               </Link>
             </NavbarItem>
             <NavbarItem>
               <Link href="/register">
-                <Button className="bg-gradient-to-tr dark:from-success-400 dark:to-primary to-success-300 from-primary-300 dark:text-white text-black font-medium shadow-lg">
+                <Button color="primary" className="font-semibold">
                   Register
                 </Button>
               </Link>

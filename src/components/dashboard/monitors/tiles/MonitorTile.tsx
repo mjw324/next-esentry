@@ -11,9 +11,8 @@ import {
   Pause,
   Edit,
   Trash2,
-  Tag,
   ShoppingBag,
-  DollarSign,
+  HandCoins,
   Store,
 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,25 +31,29 @@ interface MonitorTileProps {
   onDelete: () => void;
 }
 
-type ConditionType = "new" | "openBox" | "used";
+type ConditionType = "new" | "used";
 type ConditionColorType = "success" | "warning" | "secondary";
 
 const formatCondition = (condition: string): string => {
-  const conditionMap: Record<ConditionType, string> = {
+  // Map backend condition values to display values
+  const conditionMap: Record<string, string> = {
+    NEW: "New",
+    USED: "Used",
     new: "New",
-    openBox: "Open Box",
     used: "Used",
   };
-  return conditionMap[condition as ConditionType] || condition;
+  return conditionMap[condition] || condition;
 };
 
 const getConditionColor = (condition: string): ConditionColorType => {
-  const colorMap: Record<ConditionType, ConditionColorType> = {
+  // Map backend condition values to colors
+  const colorMap: Record<string, ConditionColorType> = {
+    NEW: "success",
+    USED: "secondary",
     new: "success",
-    openBox: "warning",
     used: "secondary",
   };
-  return colorMap[condition as ConditionType] || "secondary";
+  return colorMap[condition] || "secondary";
 };
 
 const StatusIndicator = ({ isActive }: { isActive: boolean }) => (
@@ -118,7 +121,7 @@ export default function MonitorTile({
                   <Edit size={18} />
                 </Button>
               </Tooltip>
-              <Tooltip content="Delete monitor">
+              <Tooltip color="danger" content="Delete monitor">
                 <Button
                   isIconOnly
                   size="sm"
@@ -156,19 +159,20 @@ export default function MonitorTile({
             </div>
           )}
 
-          {(minPrice !== undefined || maxPrice !== undefined) && (
+          {(minPrice !== undefined && minPrice !== null) || (maxPrice !== undefined && maxPrice !== null) ? (
             <div className="flex items-start gap-2">
-              <DollarSign size={18} className="mt-1 text-default-400" />
+              <HandCoins size={18} className="mt-1 text-default-400" />
               <p className="text-default-500">
                 <span className="font-semibold">Price:</span>{" "}
-                {minPrice !== undefined && maxPrice === undefined
-                  ? `$${minPrice}+`
-                  : `${minPrice !== undefined ? `$${minPrice}` : "$0"} - ${
-                      maxPrice !== undefined ? `$${maxPrice}` : "+"
-                    }`}
+                {minPrice !== undefined && minPrice !== null 
+                  ? maxPrice !== undefined && maxPrice !== null
+                    ? `$${minPrice} - $${maxPrice}` // Both min and max set
+                    : `$${minPrice}+` // Only min set
+                  : `<$${maxPrice}` // Only max set
+                }
               </p>
             </div>
-          )}
+          ) : null}
 
           {condition && condition.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">

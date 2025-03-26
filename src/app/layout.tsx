@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "eSentry",
   description:
-    "eSentry helps you stay ahead by providing real-time alerts for eBay and Amazon listings that match your preferences, ensuring you never miss out on the perfect deal.",
+    "eSentry helps you stay ahead by providing real-time alerts for eBay listings that match your preferences, ensuring you never miss out on the perfect deal.",
   icons: {
     icon: [
       {

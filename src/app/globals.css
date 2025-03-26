@@ -5,7 +5,13 @@
 
 
 @layer base {
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none;
+  }
 }
+
 
 @property --border-angle {
   syntax: '<angle>';
