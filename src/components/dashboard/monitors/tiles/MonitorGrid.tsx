@@ -22,7 +22,7 @@ export default function MonitorGrid() {
     error,
     refreshMonitors,
   } = useMonitors();
-  
+
   const router = useRouter();
 
   const openModal = () => setIsModalOpen(true);
@@ -56,7 +56,6 @@ export default function MonitorGrid() {
       // Error is already handled in context via toast
     }
   };
-  
 
   // Show error toast when error state changes
   useEffect(() => {
@@ -84,24 +83,34 @@ export default function MonitorGrid() {
 
   return (
     <div className="space-y-4">
-      {!loading && monitors.length === 0 ? (
+      {!loading && hasActiveEmail && monitors.length === 0 ? (
         <div className="flex items-center justify-center w-auto">
-          <Alert color="secondary" title="You don't have any monitors yet. Create your first one!" />
+          <Alert
+            color="secondary"
+            title="You don't have any monitors yet. Create your first one!"
+          />
         </div>
-      ) : 
-      <div className="flex items-center justify-center w-auto">
-        <Alert title="Note" description="If you do not log in after 3 days, any active monitors will be paused."/>
-      </div>
-      }
+      ) : (
+        <div className="flex items-center justify-center w-auto">
+          <Alert
+            title="Note"
+            description="If you do not log in after 3 days, any active monitors will be paused."
+          />
+        </div>
+      )}
 
       {!hasActiveEmail && (
         <div className="flex items-center justify-center w-auto">
-          <Alert 
-            color="warning" 
-            title="Email Setup Required" 
+          <Alert
+            color="warning"
+            title="Email Setup Required"
             description="You need to set up an active email to receive alerts from your monitors."
             endContent={
-              <Button color="warning" className="font-semibold" onPress={() => router.push("/dashboard/preferences")}>
+              <Button
+                color="warning"
+                className="font-semibold self-center"
+                onPress={() => router.push("/dashboard/preferences")}
+              >
                 Setup
               </Button>
             }
