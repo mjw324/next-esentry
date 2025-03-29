@@ -83,18 +83,20 @@ export default function MonitorGrid() {
 
   return (
     <div className="space-y-4">
-      {!loading && hasActiveEmail && monitors.length === 0 ? (
+      {!loading && hasActiveEmail && monitors.length === 0 && (
         <div className="flex items-center justify-center w-auto">
           <Alert
             color="secondary"
             title="You don't have any monitors yet. Create your first one!"
           />
         </div>
-      ) : (
+      )}
+
+      {monitors.length > 0 && (
         <div className="flex items-center justify-center w-auto">
           <Alert
-            title="Note"
-            description="If you do not log in after 3 days, any active monitors will be paused."
+            title="Active monitors will be paused"
+            description="If you do not log in after 3 days."
           />
         </div>
       )}
