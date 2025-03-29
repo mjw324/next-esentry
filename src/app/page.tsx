@@ -12,23 +12,25 @@ export default function Home() {
     <Container>
       <Hero />
 
-      <SectionTitle
-        preTitle="Try It Yourself"
-        title="Simple Setup in Just a Few Clicks"
-      >
-        Get a feel for how easy it is to set up your own customized monitor with
-        eSentry. Try our interactive demo below!
-      </SectionTitle>
+      <div className="hidden lg:block">
+        <SectionTitle
+          preTitle="Try It Yourself"
+          title="Simple Setup in Just a Few Clicks"
+        >
+          Get a feel for how easy it is to set up your own customized monitor
+          with eSentry. Try our interactive demo below!
+        </SectionTitle>
 
-      <FeaturedDeals />
+        <FeaturedDeals />
+      </div>
 
       <SectionTitle
         preTitle="eSentry Benefits"
         title="Why eSentry is Your Ultimate Monitoring Tool"
       >
         eSentry helps you stay ahead of the game by providing real-time alerts
-        for eBay listings. Customize your monitors, and never miss
-        out on the best deals that match your exact criteria.
+        for eBay listings. Customize your monitors, and never miss out on the
+        best deals that match your exact criteria.
       </SectionTitle>
 
       <Benefits data={benefitOne} />
