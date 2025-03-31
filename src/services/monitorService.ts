@@ -21,7 +21,7 @@ interface CreateMonitorDto {
   }
   
   class MonitorService {
-    private apiEndpoint = '/api/monitors'; // Use Next.js API route
+    private apiEndpoint = '/api/monitors';
   
     /**
      * Create a new monitor
@@ -35,7 +35,6 @@ interface CreateMonitorDto {
         throw new Error('Keywords are required');
       }
   
-      // Transform frontend DTO to match backend expectations
       const backendData = {
         keywords: data.keywords,
         excludedKeywords: data.excludedKeywords || [],
@@ -57,14 +56,13 @@ interface CreateMonitorDto {
           body: JSON.stringify(backendData),
         });
   
-        // Rest of the method remains unchanged
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || errorData.message || 'Failed to create monitor');
         }
   
         const responseData = await response.json();
-        const monitor = responseData.monitor; // Extract monitor from response
+        const monitor = responseData.monitor;
   
         // Transform the response to match the Monitor interface
         return {
@@ -105,7 +103,6 @@ interface CreateMonitorDto {
           throw new Error(errorData.error || errorData.message || 'Failed to fetch monitors');
         }
   
-        // Rest of the method remains unchanged
         const data = await response.json();
         console.log('Received monitors data:', data);
   
@@ -124,7 +121,6 @@ interface CreateMonitorDto {
             hasActiveEmail: !!data.hasActiveEmail
           };
         } else {
-          // Legacy format (array of monitors)
           const monitorsArray = Array.isArray(data) ? data : [];
   
           return {
@@ -138,7 +134,7 @@ interface CreateMonitorDto {
               maxPrice: monitor.maxPrice,
               condition: monitor.conditions || [],
             })),
-            hasActiveEmail: true // Default for backwards compatibility
+            hasActiveEmail: true
           };
         }
       } catch (error) {
@@ -165,7 +161,6 @@ interface CreateMonitorDto {
           conditions: updates.condition, // Map condition to conditions
         };
   
-        // Remove frontend-specific fields
         if (backendUpdates.isActive !== undefined) {
           delete backendUpdates.isActive;
         }
@@ -182,7 +177,6 @@ interface CreateMonitorDto {
           body: JSON.stringify(backendUpdates),
         });
   
-        // Rest of the method remains unchanged
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.error || errorData.message || 'Failed to update monitor');

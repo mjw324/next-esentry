@@ -1,11 +1,9 @@
-// app/api/monitors/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
 export async function GET(req: NextRequest,) {
   try {
-    // Get userId from request headers (adjust based on how you're passing it)
     const userId = req.headers.get('user-id');
 
     if (!userId) {
@@ -54,7 +52,6 @@ export async function GET(req: NextRequest,) {
 
 export async function POST(req: NextRequest) {
   try {
-    // Get userId from request headers (adjust based on how you're passing it)
     const userId = req.headers.get('user-id');
 
     if (!userId) {

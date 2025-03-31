@@ -1,4 +1,3 @@
-// app/api/emails/verify-token/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3001';

@@ -218,7 +218,6 @@ function BaseEbayMonitorModal({
   );
 }
 
-// Component that uses the monitor context
 function MonitorModalWithContext(props: EbayMonitorModalProps) {
   const monitorContext = useMonitors();
   const [submitting, setSubmitting] = useState(false);

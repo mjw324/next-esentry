@@ -25,7 +25,7 @@ export default {
           // Validate the credentials
           const result = loginSchema.safeParse(credentials);
           if (!result.success) {
-            return null; // Return null instead of throwing
+            return null;
           }
 
           const { email, password } = result.data;
@@ -37,11 +37,9 @@ export default {
             body: JSON.stringify({ email, password }),
           });
 
-          // Handle error responses
           if (!response.ok) {
             const errorData = await response.json();
             console.log("Auth error:", errorData);
-            // Return null instead of throwing errors
             return null;
           }
 
@@ -56,14 +54,14 @@ export default {
           return userData.user;
         } catch (error) {
           console.error("Auth error:", error);
-          return null; // Return null for any other errors
+          return null;
         }
       }
     })
   ],
   pages: {
     signIn: '/login',
-    error: '/login', // Redirect to login page on error
+    error: '/login',
   },
   session: {
     strategy: "jwt",

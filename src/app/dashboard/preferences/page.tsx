@@ -35,7 +35,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-// column structure
+// table column structure
 const columns = [
   { name: "EMAIL", uid: "email" },
   { name: "STATUS", uid: "status" },

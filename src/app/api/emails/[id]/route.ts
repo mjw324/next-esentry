@@ -1,4 +1,3 @@
-// app/api/emails/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
@@ -8,10 +7,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Get the ID from the route params (must await it)
     const { id } = await params;
 
-    // Get userId from request headers (adjust based on how you're passing it)
     const userId = req.headers.get('user-id');
 
     if (!userId) {

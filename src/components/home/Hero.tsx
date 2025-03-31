@@ -14,7 +14,7 @@ export const Hero = () => {
             Discover Rare eBay Finds Instantly
           </h1>
           <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-            eSentry alerts you about new eBay and Amazon listings matching your
+            eSentry alerts you about new eBay listings matching your
             customized preferences, ensuring you never miss out on the perfect
             deal.
           </p>

@@ -1,11 +1,9 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://next-esentry.vercel.app';
-
   return [
     {
-      url: `${baseUrl}/`,
+      url: 'https://www.esentry.dev',
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1.0,

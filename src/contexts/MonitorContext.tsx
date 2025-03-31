@@ -132,7 +132,6 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
 
       // Check if this is an email setup error
       if (isEmailSetupError(errorMessage)) {
-        // Show a more helpful toast with a direct action button
         addToast({
           title: "Email Setup Required",
           description: "You need to set up an active alert email before creating a monitor",
@@ -145,7 +144,6 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
         });
       } else {
         setError(errorMessage);
-        // Standard error toast
         addToast({
           title: "Error",
           description: errorMessage,
