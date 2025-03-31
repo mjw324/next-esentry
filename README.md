@@ -4,7 +4,7 @@
 
 eSentry is a powerful web application designed to monitor eBay for items as requested by users. It tracks new product listings in real-time and notifies users instantaly via email, detailing any new listings that meet their filters. Notifications are sent out directly after eSentry finds new matching listing(s).
 
-**Try eSentry Live!** 👉 [next-esentry.vercel.app](https://next-esentry.vercel.app)
+**Try eSentry Live!** 👉 [esentry.dev](https://www.esentry.dev)
 
 ## 🚀 Features
 
