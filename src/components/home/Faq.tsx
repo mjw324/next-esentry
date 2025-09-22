@@ -67,7 +67,7 @@ export const Faq = () => {
 
 const faqdata = [
   {
-    question: "How does eSentry monitor eBaylistings?",
+    question: "How does eSentry monitor eBay listings?",
     answer:
       "eSentry continuously monitors eBay listings in real-time, providing you with instant alerts when new products matching your criteria are listed.",
   },
@@ -84,6 +84,6 @@ const faqdata = [
   {
     question: "Is eSentry free to use?",
     answer:
-      "eSentry is free to use for up to 3 active monitors. If you need more monitors, you can upgrade to a premium plan for unlimited monitors and additional features.",
+      "eSentry is free to use for up to 3 simultaneous active monitors. If you need more monitors or a faster polling rate, I intend to create a premium tier for greater access very soon!",
   },
 ];

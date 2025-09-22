@@ -1,9 +1,13 @@
+"use client";
 import React from "react";
 import { Container } from "@/components/home/Container";
 import { Button } from "@heroui/react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export const Cta = () => {
+  const { data: session } = useSession();
+
   return (
     <Container>
       <div className="flex flex-wrap items-center justify-between w-full max-w-4xl gap-5 mx-auto text-white bg-success px-7 py-7 lg:px-12 lg:py-12 lg:flex-nowrap rounded-xl">
@@ -17,9 +21,9 @@ export const Cta = () => {
           </p>
         </div>
         <div className="flex-shrink-0 w-full text-center lg:w-auto">
-          <Link href="/register">
+          <Link href={session ? "/dashboard" : "/register"}>
             <Button className="p-8 text-lg font-semibold text-center bg-white text-success rounded-md">
-              Register
+              {session ? "Go to Dashboard" : "Get Started for Free"}
             </Button>
           </Link>
         </div>
