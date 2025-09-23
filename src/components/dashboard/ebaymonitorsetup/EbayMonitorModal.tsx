@@ -65,8 +65,26 @@ function BaseEbayMonitorModal({
   const [loading, setLoading] = useState(false);
   const [keywordError, setKeywordError] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string>("");
+  const [modalSize, setModalSize] = useState<"lg" | "xl" | "full">("lg");
 
   const isLoading = loading || isSubmitting;
+
+  useEffect(() => {
+    const updateModalSize = () => {
+      if (window.innerWidth < 768) {
+        setModalSize("full");
+      } else if (window.innerWidth < 1024) {
+        setModalSize("lg");
+      } else {
+        setModalSize("xl");
+      }
+    };
+
+    updateModalSize();
+    window.addEventListener("resize", updateModalSize);
+
+    return () => window.removeEventListener("resize", updateModalSize);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -144,6 +162,7 @@ function BaseEbayMonitorModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       radius="lg"
+      size={modalSize}
       classNames={{
         body: "py-6 overflow-hidden",
         base: "border-none bg-gray-50/80 dark:bg-neutral-900/90 text-white shadow-xl backdrop-blur-lg overflow-hidden",
