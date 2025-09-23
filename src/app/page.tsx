@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import { Container } from "@/components/home/Container";
 import { Hero } from "@/components/home/Hero";
 import { SectionTitle } from "@/components/home/SectionTitle";
@@ -7,7 +9,13 @@ import { Cta } from "@/components/home/Cta";
 import { FeaturedDeals } from "@/components/home/FeaturedDeals";
 import { benefitOne, benefitTwo } from "@/components/data";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect("/dashboard");
+  }
+
   return (
     <Container>
       <Hero />
