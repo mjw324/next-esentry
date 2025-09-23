@@ -161,11 +161,14 @@ function BaseEbayMonitorModal({
     <Modal
       isOpen={isOpen}
       onOpenChange={onOpenChange}
+      placement="center"
       radius="lg"
       size={modalSize}
+      shouldBlockScroll={false}
       classNames={{
+        wrapper: "items-start h-auto",
         body: "py-6 overflow-hidden",
-        base: "border-none bg-gray-50/80 dark:bg-neutral-900/90 text-white shadow-xl backdrop-blur-lg overflow-hidden",
+        base: "border-none bg-gray-50/80 dark:bg-neutral-900/90 text-white shadow-xl backdrop-blur-lg overflow-hidden my-auto",
         header: "border-b border-zinc-300 dark:border-zinc-700",
         footer: "border-t border-zinc-300 dark:border-zinc-700",
       }}
