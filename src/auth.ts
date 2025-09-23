@@ -8,6 +8,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   callbacks: {
     ...authConfig.callbacks,
+    async signIn({ user }) {
+      if (user?.id) {
+        try {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLoggedIn: new Date() }
+          })
+        } catch (error) {
+          console.error('Failed to update lastLoggedIn:', error)
+        }
+      }
+      return true
+    },
     jwt({ token, user }) {
       if (user) {
         token.id = user.id
