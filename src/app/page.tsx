@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { headers } from "next/headers";
 import { Container } from "@/components/home/Container";
 import { Hero } from "@/components/home/Hero";
 import { SectionTitle } from "@/components/home/SectionTitle";
@@ -10,7 +11,9 @@ import { FeaturedDeals } from "@/components/home/FeaturedDeals";
 import { benefitOne, benefitTwo } from "@/components/data";
 
 export default async function Home() {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
 
   if (session?.user) {
     redirect("/dashboard");

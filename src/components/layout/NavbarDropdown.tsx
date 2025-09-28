@@ -2,7 +2,7 @@
 // Collection components like Dropdown have to be rendered as client for now until fixed
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "@/lib/auth-client";
 import {
   Dropdown,
   DropdownTrigger,
@@ -38,15 +38,23 @@ export function NavbarDropdown() {
           <p className="font-semibold">Signed in as</p>
           <p className="font-semibold">{session?.user?.email}</p>
         </DropdownItem>
-        <DropdownItem 
-          key="dashboard" 
-          className={pathname === "/dashboard" ? "bg-primary-200 text-primary-600 font-medium" : ""}
+        <DropdownItem
+          key="dashboard"
+          className={
+            pathname === "/dashboard"
+              ? "bg-primary-200 text-primary-600 font-medium"
+              : ""
+          }
         >
           <Link href="/dashboard">Dashboard</Link>
         </DropdownItem>
-        <DropdownItem 
-          key="settings" 
-          className={pathname === "/dashboard/preferences" ? "bg-secondary-200 text-secondary-600 font-medium" : ""}
+        <DropdownItem
+          key="settings"
+          className={
+            pathname === "/dashboard/preferences"
+              ? "bg-secondary-200 text-secondary-600 font-medium"
+              : ""
+          }
         >
           <Link href="/dashboard/preferences">Alert Preferences</Link>
         </DropdownItem>

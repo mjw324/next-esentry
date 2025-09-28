@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { addToast } from "@heroui/toast";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import {
   Table,
   TableHeader,
@@ -26,8 +26,8 @@ import {
   Spinner,
 } from "@heroui/react";
 import {
-  Trash2, 
-  BellRing, 
+  Trash2,
+  BellRing,
   RectangleEllipsis,
   Mail,
   MailPlus,
@@ -46,9 +46,9 @@ type EmailStatus = "active" | "pending verification" | "ready";
 
 // Status color mapping using HeroUI's color types
 const statusColorMap: Record<EmailStatus, ChipProps["color"]> = {
-  "active": "success",
+  active: "success",
   "pending verification": "warning",
-  "ready": "primary",
+  ready: "primary",
 };
 
 interface EmailItem {
@@ -67,7 +67,9 @@ export default function AlertPreferences() {
   const [newEmail, setNewEmail] = useState("");
   const [otpValue, setOtpValue] = useState("");
   const [otpError, setOtpError] = useState("");
-  const [currentVerifyingId, setCurrentVerifyingId] = useState<string | null>(null);
+  const [currentVerifyingId, setCurrentVerifyingId] = useState<string | null>(
+    null
+  );
   const [emailError, setEmailError] = useState("");
   const [isAddingEmail, setIsAddingEmail] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -76,10 +78,10 @@ export default function AlertPreferences() {
 
   // Modal disclosures
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { 
-    isOpen: isVerifyOpen, 
-    onOpen: onVerifyOpen, 
-    onClose: onVerifyClose 
+  const {
+    isOpen: isVerifyOpen,
+    onOpen: onVerifyOpen,
+    onClose: onVerifyClose,
   } = useDisclosure();
 
   // Fetch emails from API
@@ -94,20 +96,20 @@ export default function AlertPreferences() {
     }
     setIsLoading(true);
     try {
-      const response = await fetch('/api/emails', {
-        method: 'GET',
+      const response = await fetch("/api/emails", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
+          "Content-Type": "application/json",
+          "user-id": session.user.id,
         },
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch emails');
+        throw new Error("Failed to fetch emails");
       }
       const data = await response.json();
       setEmails(data);
     } catch (error) {
-      console.error('Error fetching emails:', error);
+      console.error("Error fetching emails:", error);
       addToast({
         title: "Error",
         description: "Failed to load alert emails",
@@ -136,7 +138,7 @@ export default function AlertPreferences() {
     }
 
     // Check if email already exists
-    if (emails.some(item => item.email === newEmail)) {
+    if (emails.some((item) => item.email === newEmail)) {
       setEmailError("This email is already in your list");
       return;
     }
@@ -154,18 +156,18 @@ export default function AlertPreferences() {
     setIsAddingEmail(true);
 
     try {
-      const response = await fetch('/api/emails', {
-        method: 'POST',
+      const response = await fetch("/api/emails", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
+          "Content-Type": "application/json",
+          "user-id": session.user.id,
         },
         body: JSON.stringify({ email: newEmail }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to add email');
+        throw new Error(errorData.error || "Failed to add email");
       }
 
       const data = await response.json();
@@ -193,126 +195,141 @@ export default function AlertPreferences() {
       }
     } catch (error) {
       console.error("Error adding email:", error);
-      setEmailError(error instanceof Error ? error.message : "Failed to add email");
+      setEmailError(
+        error instanceof Error ? error.message : "Failed to add email"
+      );
     } finally {
       setIsAddingEmail(false);
     }
   };
 
-  const handleDeleteEmail = useCallback(async (id: string) => {
-    if (isProcessingAction) return;
-  
-    if (!session?.user?.id) {
-      addToast({
-        title: "Error",
-        description: "You must be logged in to perform this action",
-        color: "danger",
-      });
-      return;
-    }
+  const handleDeleteEmail = useCallback(
+    async (id: string) => {
+      if (isProcessingAction) return;
 
-    setIsProcessingAction(true);
-    try {
-      const response = await fetch(`/api/emails/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
-        },
-      });
-  
-      if (!response.ok) {
-        if (response.status !== 204) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to delete email');
+      if (!session?.user?.id) {
+        addToast({
+          title: "Error",
+          description: "You must be logged in to perform this action",
+          color: "danger",
+        });
+        return;
+      }
+
+      setIsProcessingAction(true);
+      try {
+        const response = await fetch(`/api/emails/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": session.user.id,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status !== 204) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to delete email");
+          }
         }
-      }
-  
-      // Refresh emails list
-      await fetchEmails();
-  
-      addToast({
-        title: "Success",
-        description: "Email deleted successfully",
-        color: "success",
-      });
-    } catch (error) {
-      console.error("Error deleting email:", error);
-      addToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to delete email",
-        color: "danger",
-      });
-    } finally {
-      setIsProcessingAction(false);
-    }
-  }, [isProcessingAction, fetchEmails]);
-  
-  const handleSetActive = useCallback(async (id: string) => {
-    if (isProcessingAction) return;
 
-    if (!session?.user?.id) {
-      addToast({
-        title: "Error",
-        description: "You must be logged in to perform this action",
-        color: "danger",
-      });
-      return;
-    }
-  
-    setIsProcessingAction(true);
-    try {
-      const response = await fetch(`/api/emails/${id}/set-active`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
-        },
-      });
-  
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to set email as active');
-      }
-  
-      const data = await response.json();
-  
-      // Update emails with response data
-      if (data.emails) {
-        setEmails(data.emails);
-      } else {
-        // Fallback to refreshing all emails
+        // Refresh emails list
         await fetchEmails();
+
+        addToast({
+          title: "Success",
+          description: "Email deleted successfully",
+          color: "success",
+        });
+      } catch (error) {
+        console.error("Error deleting email:", error);
+        addToast({
+          title: "Error",
+          description:
+            error instanceof Error ? error.message : "Failed to delete email",
+          color: "danger",
+        });
+      } finally {
+        setIsProcessingAction(false);
       }
-  
-      addToast({
-        title: "Success",
-        description: "Alert email activated successfully",
-        color: "success",
-      });
-    } catch (error) {
-      console.error("Error setting email as active:", error);
-      addToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to set email as active",
-        color: "danger",
-      });
-    } finally {
-      setIsProcessingAction(false);
-    }
-  }, [isProcessingAction, fetchEmails, setEmails]);
-  
-  const handleVerifyEmail = useCallback((id: string) => {
-    // Store the ID of the email being verified
-    setCurrentVerifyingId(id);
-  
-    // Reset OTP value and errors
-    setOtpValue("");
-    setOtpError("");
-  
-    // Open verification modal
-    onVerifyOpen();
-  }, [onVerifyOpen, setCurrentVerifyingId, setOtpValue, setOtpError]);
+    },
+    [isProcessingAction, fetchEmails]
+  );
+
+  const handleSetActive = useCallback(
+    async (id: string) => {
+      if (isProcessingAction) return;
+
+      if (!session?.user?.id) {
+        addToast({
+          title: "Error",
+          description: "You must be logged in to perform this action",
+          color: "danger",
+        });
+        return;
+      }
+
+      setIsProcessingAction(true);
+      try {
+        const response = await fetch(`/api/emails/${id}/set-active`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": session.user.id,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to set email as active");
+        }
+
+        const data = await response.json();
+
+        // Update emails with response data
+        if (data.emails) {
+          setEmails(data.emails);
+        } else {
+          // Fallback to refreshing all emails
+          await fetchEmails();
+        }
+
+        addToast({
+          title: "Success",
+          description: "Alert email activated successfully",
+          color: "success",
+        });
+      } catch (error) {
+        console.error("Error setting email as active:", error);
+        addToast({
+          title: "Error",
+          description:
+            error instanceof Error
+              ? error.message
+              : "Failed to set email as active",
+          color: "danger",
+        });
+      } finally {
+        setIsProcessingAction(false);
+      }
+    },
+    [isProcessingAction, fetchEmails, setEmails]
+  );
+
+  const handleVerifyEmail = useCallback(
+    (id: string) => {
+      // Store the ID of the email being verified
+      setCurrentVerifyingId(id);
+
+      // Reset OTP value and errors
+      setOtpValue("");
+      setOtpError("");
+
+      // Open verification modal
+      onVerifyOpen();
+    },
+    [onVerifyOpen, setCurrentVerifyingId, setOtpValue, setOtpError]
+  );
 
   const handleVerifyOtp = async () => {
     // Validate OTP
@@ -335,17 +352,17 @@ export default function AlertPreferences() {
     setIsVerifying(true);
     try {
       const response = await fetch(`/api/emails/${currentVerifyingId}/verify`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
+          "Content-Type": "application/json",
+          "user-id": session.user.id,
         },
         body: JSON.stringify({ otp: otpValue }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Invalid verification code');
+        throw new Error(errorData.error || "Invalid verification code");
       }
 
       const data = await response.json();
@@ -365,7 +382,9 @@ export default function AlertPreferences() {
       });
     } catch (error) {
       console.error("Error verifying email:", error);
-      setOtpError(error instanceof Error ? error.message : "Invalid verification code");
+      setOtpError(
+        error instanceof Error ? error.message : "Invalid verification code"
+      );
     } finally {
       setIsVerifying(false);
     }
@@ -385,17 +404,22 @@ export default function AlertPreferences() {
 
     setIsResendingCode(true);
     try {
-      const response = await fetch(`/api/emails/${currentVerifyingId}/resend-code`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'user-id': session.user.id,
-        },
-      });
+      const response = await fetch(
+        `/api/emails/${currentVerifyingId}/resend-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "user-id": session.user.id,
+          },
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to resend verification code');
+        throw new Error(
+          errorData.error || "Failed to resend verification code"
+        );
       }
 
       // Get the email address for the toast message
@@ -411,7 +435,8 @@ export default function AlertPreferences() {
       console.error("Error resending code:", error);
       addToast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to resend code",
+        description:
+          error instanceof Error ? error.message : "Failed to resend code",
         color: "danger",
       });
     } finally {
@@ -420,93 +445,96 @@ export default function AlertPreferences() {
   };
 
   const getCurrentVerifyingEmail = (): string => {
-    const email = emails.find(e => e.id === currentVerifyingId);
+    const email = emails.find((e) => e.id === currentVerifyingId);
     return email ? email.email : "";
   };
 
-  const renderCell = React.useCallback((item: EmailItem, columnKey: React.Key) => {
-    const cellValue = item[columnKey as keyof EmailItem];
+  const renderCell = React.useCallback(
+    (item: EmailItem, columnKey: React.Key) => {
+      const cellValue = item[columnKey as keyof EmailItem];
 
-    switch (columnKey) {
-      case "email":
-        return (
-          <div className="flex items-center gap-2">
-            <Mail className="h-5 w-5" />
-            <span>{cellValue}</span>
-          </div>
-        );
-      case "status":
-        return (
-          <Chip 
-            className="capitalize" 
-            color={statusColorMap[item.status as EmailStatus]}
-            size="sm" 
-            variant="flat"
-          >
-            {item.status}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2 justify-end">
-            {item.status !== "active" && item.status === "ready" && (
-              <Tooltip content="Set as active">
-                <Button 
-                  isIconOnly 
-                  size="sm" 
-                  variant="light" 
-                  color="success"
-                  onPress={() => handleSetActive(item.id)}
-                  isDisabled={isProcessingAction}
-                >
-                  <BellRing size={18} />
-                </Button>
-              </Tooltip>
-            )}
+      switch (columnKey) {
+        case "email":
+          return (
+            <div className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              <span>{cellValue}</span>
+            </div>
+          );
+        case "status":
+          return (
+            <Chip
+              className="capitalize"
+              color={statusColorMap[item.status as EmailStatus]}
+              size="sm"
+              variant="flat"
+            >
+              {item.status}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2 justify-end">
+              {item.status !== "active" && item.status === "ready" && (
+                <Tooltip content="Set as active">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="success"
+                    onPress={() => handleSetActive(item.id)}
+                    isDisabled={isProcessingAction}
+                  >
+                    <BellRing size={18} />
+                  </Button>
+                </Tooltip>
+              )}
 
-            {item.status === "pending verification" && (
-              <Tooltip content="Verify email">
-                <Button 
-                  isIconOnly 
-                  size="sm" 
-                  variant="light" 
-                  color="warning"
-                  onPress={() => handleVerifyEmail(item.id)}
-                >
-                  <RectangleEllipsis size={18} />
-                </Button>
-              </Tooltip>
-            )}
+              {item.status === "pending verification" && (
+                <Tooltip content="Verify email">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="warning"
+                    onPress={() => handleVerifyEmail(item.id)}
+                  >
+                    <RectangleEllipsis size={18} />
+                  </Button>
+                </Tooltip>
+              )}
 
-            {item.status !== "active" && (
-              <Tooltip color="danger" content="Delete email">
-                <Button 
-                  isIconOnly 
-                  size="sm" 
-                  variant="light" 
-                  color="danger"
-                  onPress={() => handleDeleteEmail(item.id)}
-                  isDisabled={isProcessingAction}
-                >
-                  <Trash2 size={18} />
-                </Button>
-              </Tooltip>
-            )}
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, [isProcessingAction, handleDeleteEmail, handleSetActive, handleVerifyEmail]);
+              {item.status !== "active" && (
+                <Tooltip color="danger" content="Delete email">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="danger"
+                    onPress={() => handleDeleteEmail(item.id)}
+                    isDisabled={isProcessingAction}
+                  >
+                    <Trash2 size={18} />
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [isProcessingAction, handleDeleteEmail, handleSetActive, handleVerifyEmail]
+  );
 
   return (
     <div className="container pt-8 px-8 mx-auto xl:px-0">
       <div className="mb-6">
-        <Button 
-          variant="light" 
-          color="default" 
+        <Button
+          variant="light"
+          color="default"
           startContent={<ArrowLeft size={18} />}
-          onPress={() => router.push('/dashboard')}
+          onPress={() => router.push("/dashboard")}
           className="mb-4"
         >
           Back to Dashboard
@@ -514,8 +542,8 @@ export default function AlertPreferences() {
 
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Alert Email Preferences</h1>
-          <Button 
-            color="primary" 
+          <Button
+            color="primary"
             onPress={onOpen}
             startContent={<MailPlus size={18} />}
           >
@@ -526,7 +554,8 @@ export default function AlertPreferences() {
 
       <div className="py-6">
         <p className="text-gray-600 mb-4">
-          Configure which email receives alerts and notifications. Only one email can be active at a time.
+          Configure which email receives alerts and notifications. Only one
+          email can be active at a time.
         </p>
 
         {isLoading ? (
@@ -537,15 +566,18 @@ export default function AlertPreferences() {
           <Table aria-label="Alert email preferences table">
             <TableHeader columns={columns}>
               {(column) => (
-                <TableColumn 
-                  key={column.uid} 
+                <TableColumn
+                  key={column.uid}
                   align={column.uid === "actions" ? "end" : "start"}
                 >
                   {column.name}
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody items={emails} emptyContent={"No alert emails configured"}>
+            <TableBody
+              items={emails}
+              emptyContent={"No alert emails configured"}
+            >
               {(item) => (
                 <TableRow key={item.id}>
                   {(columnKey) => (
@@ -574,15 +606,16 @@ export default function AlertPreferences() {
               errorMessage={emailError}
             />
             <p className="text-sm text-gray-500 mt-2">
-              We will send you a one-time PIN (OTP) to the email provided to verify it&apos;s you.
+              We will send you a one-time PIN (OTP) to the email provided to
+              verify it&apos;s you.
             </p>
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" onPress={onClose}>
               Cancel
             </Button>
-            <Button 
-              color="primary" 
+            <Button
+              color="primary"
               onPress={handleAddEmail}
               isLoading={isAddingEmail}
             >
@@ -600,10 +633,15 @@ export default function AlertPreferences() {
             <div className="flex flex-col items-center gap-4">
               <ShieldCheck size={48} className="text-warning" />
               <div className="text-center">
-                <h3 className="text-xl font-semibold mb-2">Email Verification</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  Email Verification
+                </h3>
                 <p className="text-gray-600 mb-4">
-                  We&apos;ve sent a verification code to:<br />
-                  <span className="font-medium">{getCurrentVerifyingEmail()}</span>
+                  We&apos;ve sent a verification code to:
+                  <br />
+                  <span className="font-medium">
+                    {getCurrentVerifyingEmail()}
+                  </span>
                 </p>
               </div>
 
@@ -619,9 +657,9 @@ export default function AlertPreferences() {
               </div>
 
               <p className="text-sm text-gray-500 mt-2">
-                Didn&apos;t receive the code? 
-                <Button 
-                  variant="light" 
+                Didn&apos;t receive the code?
+                <Button
+                  variant="light"
                   size="sm"
                   onPress={handleResendCode}
                   isLoading={isResendingCode}
@@ -636,8 +674,8 @@ export default function AlertPreferences() {
             <Button variant="flat" onPress={onVerifyClose}>
               Cancel
             </Button>
-            <Button 
-              color="primary" 
+            <Button
+              color="primary"
               onPress={handleVerifyOtp}
               isLoading={isVerifying}
             >

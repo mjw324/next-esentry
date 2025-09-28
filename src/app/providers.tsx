@@ -2,8 +2,7 @@
 
 import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { SessionProvider } from "next-auth/react";
-import { ToastProvider } from "@heroui/toast"
+import { ToastProvider } from "@heroui/toast";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,10 +12,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem={true}
     >
       <HeroUIProvider>
-        <SessionProvider>
-          <ToastProvider />
-          {children}
-        </SessionProvider>
+        <ToastProvider />
+        {children}
       </HeroUIProvider>
     </NextThemesProvider>
   );

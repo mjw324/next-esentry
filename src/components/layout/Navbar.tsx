@@ -7,7 +7,7 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@heroui/react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 import ThemeChanger from "@/components/layout/ThemeSwitcher";
 import Image from "next/image";
 import { NavbarDropdown } from "./NavbarDropdown";

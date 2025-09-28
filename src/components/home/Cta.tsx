@@ -3,7 +3,7 @@ import React from "react";
 import { Container } from "@/components/home/Container";
 import { Button } from "@heroui/react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 export const Cta = () => {
   const { data: session } = useSession();

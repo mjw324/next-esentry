@@ -3,19 +3,20 @@
 import { Button, Input } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useCallback, useState, useEffect } from "react";
 import { z } from "zod";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession, authClient } from "@/lib/auth-client";
 
-const passwordSchema = z.string().min(8, "Password must be at least 8 characters");
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
 
 export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data } = useSession();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,14 +41,15 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       let errorMessage = "Authentication failed. Please try again.";
 
       if (errorType === "OAuthAccountNotLinked") {
-        errorMessage = "An account with this email already exists. Please try logging in through a different method.";
+        errorMessage =
+          "An account with this email already exists. Please try logging in through a different method.";
       }
 
       // Display the error message as a toast
       addToast({
         title: "Authentication Error",
         description: errorMessage,
-        color: "danger"
+        color: "danger",
       });
 
       // Clean up the URL to prevent the error from showing again on refresh
@@ -73,44 +75,55 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
 
     // Clear error when field is empty
     if (!newPassword) {
-      setErrors(prev => ({ ...prev, password: undefined }));
+      setErrors((prev) => ({ ...prev, password: undefined }));
       return;
     }
 
     // Validate password
     const result = passwordSchema.safeParse(newPassword);
     if (result.success) {
-      setErrors(prev => ({ ...prev, password: undefined }));
+      setErrors((prev) => ({ ...prev, password: undefined }));
     } else {
-      setErrors(prev => ({ ...prev, password: result.error.issues[0].message }));
+      setErrors((prev) => ({
+        ...prev,
+        password: result.error.issues[0].message,
+      }));
     }
 
     // Check if confirm password matches (for register mode)
     if (mode === "register" && confirmPassword) {
       if (newPassword === confirmPassword) {
-        setErrors(prev => ({ ...prev, confirmPassword: undefined }));
+        setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
       } else {
-        setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match" }));
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: "Passwords do not match",
+        }));
       }
     }
   };
 
   // Validate confirm password in real-time
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
 
     // Clear error when field is empty
     if (!newConfirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
+      setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
       return;
     }
 
     // Check if passwords match
     if (password === newConfirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: undefined }));
+      setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
     } else {
-      setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match" }));
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: "Passwords do not match",
+      }));
     }
   };
 
@@ -145,28 +158,24 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading((prev) => ({ ...prev, form: true }));
-  
+
     try {
       if (mode === "register") {
         // Registration endpoint
-        const response = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
+        const { data, error } = await authClient.signUp.email({
+          name: "John Doe",
+          email: email,
+          password: password,
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to register");
+        if (error) {
+          throw new Error(error.message || "Failed to register");
         }
 
         addToast({
           title: "Registration Successful",
           description: "Please check your email to verify your account.",
-          color: "success"
+          color: "success",
         });
 
         // Clear form
@@ -178,24 +187,23 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       if (mode === "login") {
         // Try to authenticate with credentials
         try {
-          const result = await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
+          const { data, error } = await authClient.signIn.email({
+            email: email,
+            password: password,
           });
-  
-          if (result?.error) {
+
+          if (error) {
             // Handle standard Auth.js errors
             addToast({
               title: "Authentication Failed",
               description: "Invalid email or password",
-              color: "danger"
+              color: "danger",
             });
-          } else if (result?.ok) {
+          } else if (data) {
             addToast({
               title: "Login Successful",
               description: "Redirecting to dashboard...",
-              color: "success"
+              color: "success",
             });
             router.push(callbackUrl);
           } else {
@@ -203,7 +211,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
             addToast({
               title: "Login Failed",
               description: "Please check your credentials and try again.",
-              color: "danger"
+              color: "danger",
             });
           }
         } catch (signInError) {
@@ -211,8 +219,9 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
           console.error("Sign in error:", signInError);
           addToast({
             title: "Authentication Error",
-            description: "There was a problem processing your request. Please try again.",
-            color: "danger"
+            description:
+              "There was a problem processing your request. Please try again.",
+            color: "danger",
           });
         }
       }
@@ -220,13 +229,14 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       // Other errors from the try block
       addToast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Something went wrong",
-        color: "danger"
+        description:
+          error instanceof Error ? error.message : "Something went wrong",
+        color: "danger",
       });
     } finally {
       setLoading((prev) => ({ ...prev, form: false }));
     }
-  };  
+  };
 
   const signInWithProvider = useCallback(
     (provider: "github" | "google") => async () => {
@@ -234,20 +244,25 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
         ...prev,
         [provider]: true,
       }));
-
       try {
-        const signInResult = await signIn(provider, {
-          callbackUrl,
+        const signInResult = await signIn.social({
+          provider,
+          callbackURL: callbackUrl, // Note: better-auth uses callbackURL (capital URL)
         });
 
-        if (signInResult?.error) {
-          throw new Error(signInResult.error);
+        // Better-auth returns data differently - check for errors
+        if (!signInResult || signInResult.error) {
+          throw new Error(signInResult?.error?.message || "Sign in failed");
         }
+
+        // If successful, better-auth will handle the redirect automatically
+        // You might want to add additional success handling here
       } catch (error) {
         addToast({
           title: "Authentication Failed",
-          description: "Please try again.",
-          color: "danger"
+          description:
+            error instanceof Error ? error.message : "Please try again.",
+          color: "danger",
         });
       } finally {
         setLoading((prev) => ({
@@ -357,10 +372,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
             fullWidth
             variant="flat"
             startContent={
-              <FontAwesomeIcon
-                icon={faGoogle}
-                className="w-5 h-5"
-              />
+              <FontAwesomeIcon icon={faGoogle} className="w-5 h-5" />
             }
             isLoading={loading.google}
             isDisabled={areButtonsDisabled}
@@ -372,10 +384,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
             fullWidth
             variant="flat"
             startContent={
-              <FontAwesomeIcon
-                icon={faGithub}
-                className="w-5 h-5"
-              />
+              <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
             }
             isLoading={loading.github}
             isDisabled={areButtonsDisabled}

@@ -1,11 +1,17 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { addToast } from "@heroui/toast";
 import MonitorService from "@/services/monitorService";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth-client";
 
 export interface Monitor {
   id: string;
@@ -37,7 +43,7 @@ const MonitorContext = createContext<MonitorContextType | undefined>(undefined);
 // Helper function to extract error message from error objects
 const getErrorMessage = (err: unknown): string => {
   if (err instanceof Error) return err.message;
-  if (typeof err === 'string') return err;
+  if (typeof err === "string") return err;
   return "An unexpected error occurred";
 };
 
@@ -45,9 +51,9 @@ const getErrorMessage = (err: unknown): string => {
 const isEmailSetupError = (errorMsg: string): boolean => {
   const lowerCaseMsg = errorMsg.toLowerCase();
   return (
-    lowerCaseMsg.includes("no active email") || 
+    lowerCaseMsg.includes("no active email") ||
     lowerCaseMsg.includes("set up an active alert email") ||
-    lowerCaseMsg.includes("email") && lowerCaseMsg.includes("before creating")
+    (lowerCaseMsg.includes("email") && lowerCaseMsg.includes("before creating"))
   );
 };
 
@@ -74,15 +80,15 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
         return; // Silently exit if not authenticated
       }
 
-      console.log('Refreshing monitors...');
+      console.log("Refreshing monitors...");
       const data = await MonitorService.getAll(session.user.id);
-      console.log('Successfully fetched monitors:', data);
+      console.log("Successfully fetched monitors:", data);
 
       // Update both monitors and hasActiveEmail state
       setMonitors(data.monitors);
       setHasActiveEmail(data.hasActiveEmail);
     } catch (err) {
-      console.error('Error refreshing monitors:', err);
+      console.error("Error refreshing monitors:", err);
       const errorMessage = getErrorMessage(err);
       setError(errorMessage);
       addToast({
@@ -115,11 +121,14 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      console.log('Creating monitor with data:', {
+      console.log("Creating monitor with data:", {
         ...monitorData,
         useLoginEmail: true,
       });
-      const newMonitor = await MonitorService.create(monitorData, session.user.id);
+      const newMonitor = await MonitorService.create(
+        monitorData,
+        session.user.id
+      );
       setMonitors((current) => [...current, newMonitor]);
       addToast({
         title: "Monitor Created",
@@ -127,14 +136,15 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
         color: "success",
       });
     } catch (err) {
-      console.error('Error response from backend:', err);
+      console.error("Error response from backend:", err);
       const errorMessage = getErrorMessage(err);
 
       // Check if this is an email setup error
       if (isEmailSetupError(errorMessage)) {
         addToast({
           title: "Email Setup Required",
-          description: "You need to set up an active alert email before creating a monitor",
+          description:
+            "You need to set up an active alert email before creating a monitor",
           color: "warning",
           endContent: (
             <Button size="sm" color="primary" onPress={navigateToPreferences}>
@@ -171,7 +181,11 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const updatedMonitor = await MonitorService.update(id, updates, session.user.id);
+      const updatedMonitor = await MonitorService.update(
+        id,
+        updates,
+        session.user.id
+      );
       setMonitors((current) =>
         current.map((monitor) => (monitor.id === id ? updatedMonitor : monitor))
       );
@@ -248,7 +262,11 @@ export function MonitorProvider({ children }: { children: React.ReactNode }) {
       const monitor = monitors.find((m) => m.id === id);
       if (!monitor) throw new Error("Monitor not found");
 
-      const updatedMonitor = await MonitorService.toggle(id, !monitor.isActive, session.user.id);
+      const updatedMonitor = await MonitorService.toggle(
+        id,
+        !monitor.isActive,
+        session.user.id
+      );
       setMonitors((current) =>
         current.map((m) => (m.id === id ? updatedMonitor : m))
       );
