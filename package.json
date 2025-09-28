@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "prisma generate && next build",
+    "build": "node -e \"require('child_process').execSync('prisma generate --schema=node_modules/@mjw324/prisma-shared/prisma/schema.prisma', {stdio: 'inherit'})\" && next build",
     "start": "next start -p 3001",
     "lint": "next lint",
     "postinstall": "prisma generate",
