@@ -18,12 +18,14 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
   const { data } = useSession();
   const searchParams = useSearchParams();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<{
+    name?: string;
     email?: string;
     password?: string;
     confirmPassword?: string;
@@ -62,25 +64,44 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
 
   const callbackUrl = "/dashboard";
 
+  // Handle name change with validation
+  const handleNameChange = (value: string) => {
+    setName(value);
+
+    // Clear error when field is empty
+    if (!value) {
+      setErrors((prev) => ({ ...prev, name: undefined }));
+      return;
+    }
+
+    // Validate name (minimum 2 characters)
+    if (value.trim().length < 2) {
+      setErrors((prev) => ({
+        ...prev,
+        name: "Name must be at least 2 characters",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, name: undefined }));
+    }
+  };
+
   // Validate email in real-time
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
+  const handleEmailChange = (value: string) => {
+    setEmail(value);
   };
 
   // Validate password in real-time
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
+  const handlePasswordChange = (value: string) => {
+    setPassword(value);
 
     // Clear error when field is empty
-    if (!newPassword) {
+    if (!value) {
       setErrors((prev) => ({ ...prev, password: undefined }));
       return;
     }
 
     // Validate password
-    const result = passwordSchema.safeParse(newPassword);
+    const result = passwordSchema.safeParse(value);
     if (result.success) {
       setErrors((prev) => ({ ...prev, password: undefined }));
     } else {
@@ -92,7 +113,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
 
     // Check if confirm password matches (for register mode)
     if (mode === "register" && confirmPassword) {
-      if (newPassword === confirmPassword) {
+      if (value === confirmPassword) {
         setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
       } else {
         setErrors((prev) => ({
@@ -104,20 +125,17 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   };
 
   // Validate confirm password in real-time
-  const handleConfirmPasswordChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const newConfirmPassword = e.target.value;
-    setConfirmPassword(newConfirmPassword);
+  const handleConfirmPasswordChange = (value: string) => {
+    setConfirmPassword(value);
 
     // Clear error when field is empty
-    if (!newConfirmPassword) {
+    if (!value) {
       setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
       return;
     }
 
     // Check if passwords match
-    if (password === newConfirmPassword) {
+    if (password === value) {
       setErrors((prev) => ({ ...prev, confirmPassword: undefined }));
     } else {
       setErrors((prev) => ({
@@ -130,6 +148,15 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   // Final validation before form submission
   const validateForm = () => {
     const newErrors: typeof errors = {};
+
+    // Validate name for registration
+    if (mode === "register") {
+      if (!name.trim()) {
+        newErrors.name = "Name is required";
+      } else if (name.trim().length < 2) {
+        newErrors.name = "Name must be at least 2 characters";
+      }
+    }
 
     // Validate password
     if (!password) {
@@ -163,7 +190,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       if (mode === "register") {
         // Registration endpoint
         const { data, error } = await authClient.signUp.email({
-          name: "John Doe",
+          name: name.trim(),
           email: email,
           password: password,
         });
@@ -179,6 +206,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
         });
 
         // Clear form
+        setName("");
         setEmail("");
         setPassword("");
         setConfirmPassword("");
@@ -277,10 +305,23 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-4">
+        {mode === "register" && (
+          <div>
+            <Input
+              value={name}
+              onValueChange={handleNameChange}
+              label="Name"
+              type="text"
+              isInvalid={!!errors.name}
+              errorMessage={errors.name}
+            />
+          </div>
+        )}
+
         <div>
           <Input
             value={email}
-            onChange={handleEmailChange}
+            onValueChange={handleEmailChange}
             label="Email"
             type="email"
           />
@@ -290,7 +331,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
           <Input
             type={showPassword ? "text" : "password"}
             value={password}
-            onChange={handlePasswordChange}
+            onValueChange={handlePasswordChange}
             label="Password"
             isInvalid={!!errors.password}
             errorMessage={errors.password}
@@ -315,7 +356,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
             <Input
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
-              onChange={handleConfirmPasswordChange}
+              onValueChange={handleConfirmPasswordChange}
               label="Confirm Password"
               isInvalid={!!errors.confirmPassword}
               errorMessage={errors.confirmPassword}
