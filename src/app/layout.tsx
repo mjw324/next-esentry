@@ -5,8 +5,23 @@ import "./globals.css";
 import "@theme-toggles/react/css/Expand.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { headers } from "next/headers";
+import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// Server-side session fetching with caching for Better Auth performance
+async function getServerSession(requestHeaders: Headers) {
+  "use cache";
+  try {
+    return await auth.api.getSession({
+      headers: requestHeaders,
+    });
+  } catch (error) {
+    console.error("Failed to fetch server session:", error);
+    return null;
+  }
+}
 
 export const metadata: Metadata = {
   title: "eSentry",
@@ -28,16 +43,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Pre-fetch session on server for SSR optimization
+  const requestHeaders = await headers();
+  const initialSession = await getServerSession(requestHeaders);
+
   return (
     // Supress hydration warning for the theme changer, this only supresses hydration warnings for this depth
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <Providers>
+        <Providers initialSession={initialSession}>
           {/* Navbar dynamically adjusts based on the current path */}
           <Navbar />
           <div>{children}</div>

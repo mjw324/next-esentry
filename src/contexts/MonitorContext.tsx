@@ -12,6 +12,7 @@ import MonitorService from "@/services/monitorService";
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
+import { useServerSession } from "@/app/providers";
 
 export interface Monitor {
   id: string;
@@ -57,9 +58,19 @@ const isEmailSetupError = (errorMsg: string): boolean => {
   );
 };
 
-export function MonitorProvider({ children }: { children: React.ReactNode }) {
+export function MonitorProvider({
+  children,
+  initialSession,
+}: {
+  children: React.ReactNode;
+  initialSession?: any;
+}) {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: clientSession } = useSession();
+  const serverSession = useServerSession();
+
+  // Use client session, fallback to passed initialSession, then server session
+  const session = clientSession || initialSession || serverSession;
   const [monitors, setMonitors] = useState<Monitor[]>([]);
   const [hasActiveEmail, setHasActiveEmail] = useState<boolean>(true);
   const [editingMonitor, setEditingMonitor] = useState<Monitor | null>(null);

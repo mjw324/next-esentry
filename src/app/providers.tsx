@@ -3,8 +3,18 @@
 import { HeroUIProvider } from "@heroui/react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ToastProvider } from "@heroui/toast";
+import { createContext, useContext, ReactNode } from "react";
 
-export function Providers({ children }: { children: React.ReactNode }) {
+// Session context for server-side fallback pattern
+const SessionContext = createContext<any>(null);
+
+export function Providers({
+  children,
+  initialSession
+}: {
+  children: ReactNode;
+  initialSession?: any;
+}) {
   return (
     <NextThemesProvider
       attribute="class"
@@ -12,9 +22,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
       enableSystem={true}
     >
       <HeroUIProvider>
-        <ToastProvider />
-        {children}
+        <SessionContext.Provider value={initialSession}>
+          <ToastProvider />
+          {children}
+        </SessionContext.Provider>
       </HeroUIProvider>
     </NextThemesProvider>
   );
 }
+
+// Hook to access server-side session fallback
+export const useServerSession = () => useContext(SessionContext);
