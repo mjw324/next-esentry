@@ -27,8 +27,8 @@ importers:
         specifier: 2.7.5
         version: 2.7.5(@types/react@19.0.10)(framer-motion@11.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.17)
       '@mjw324/prisma-shared':
-        specifier: ^1.0.16
-        version: 1.0.16(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
+        specifier: ^1.1.0
+        version: 1.1.0(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
       '@prisma/client':
         specifier: ^6.16.2
         version: 6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
@@ -1239,8 +1239,8 @@ packages:
   '@levischuck/tiny-cbor@0.2.11':
     resolution: {integrity: sha512-llBRm4dT4Z89aRsm6u2oEZ8tfwL/2l6BwpZ7JcyieouniDECM5AqNgr/y08zalEIvW3RSK4upYyybDcmjXqAow==}
 
-  '@mjw324/prisma-shared@1.0.16':
-    resolution: {integrity: sha512-lxqGbgp7rcPbviaDj5CnkHtF/pRXzksOoN1WnlUhxfr84E0fTEVd4HW5TknmnoJZCgLuBR5q1z7YPrddIR1yMA==}
+  '@mjw324/prisma-shared@1.1.0':
+    resolution: {integrity: sha512-FA9wGGutbKKUdJGfZ1te2fFjSaWt1/ZQEBoXwy3MLKk8tHOmbH0F2qMB6Tm7RRlOnHiZgAC5cdOBb5FF7rQ09g==}
 
   '@next/env@15.5.4':
     resolution: {integrity: sha512-27SQhYp5QryzIT5uO8hq99C69eLQ7qkzkDPsk3N+GuS2XgOgoYEeOav7Pf8Tn4drECOVDsDg8oj+/DVy8qQL2A==}
@@ -1383,6 +1383,12 @@ packages:
 
   '@prisma/engines@6.16.2':
     resolution: {integrity: sha512-7yf3AjfPUgsg/l7JSu1iEhsmZZ/YE00yURPjTikqm2z4btM0bCl2coFtTGfeSOWbQMmq45Jab+53yGUIAT1sjA==}
+
+  '@prisma/extension-accelerate@2.0.2':
+    resolution: {integrity: sha512-yZK6/k7uOEFpEsKoZezQS1CKDboPtBCQ0NyI70e1Un8tDiRgg80iWGyjsJmRpps2ZIut3MroHP+dyR3wVKh8lA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@prisma/client': '>=4.16.1'
 
   '@prisma/fetch-engine@6.16.2':
     resolution: {integrity: sha512-wPnZ8DMRqpgzye758ZvfAMiNJRuYpz+rhgEBZi60ZqDIgOU2694oJxiuu3GKFeYeR/hXxso4/2oBC243t/whxQ==}
@@ -5780,9 +5786,10 @@ snapshots:
 
   '@levischuck/tiny-cbor@0.2.11': {}
 
-  '@mjw324/prisma-shared@1.0.16(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)':
+  '@mjw324/prisma-shared@1.1.0(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
       '@prisma/client': 6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
+      '@prisma/extension-accelerate': 2.0.2(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3))
     transitivePeerDependencies:
       - prisma
       - typescript
@@ -5958,6 +5965,10 @@ snapshots:
       '@prisma/engines-version': 6.16.0-7.1c57fdcd7e44b29b9313256c76699e91c3ac3c43
       '@prisma/fetch-engine': 6.16.2
       '@prisma/get-platform': 6.16.2
+
+  '@prisma/extension-accelerate@2.0.2(@prisma/client@6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3))':
+    dependencies:
+      '@prisma/client': 6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
 
   '@prisma/fetch-engine@6.16.2':
     dependencies:
