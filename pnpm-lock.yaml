@@ -27,8 +27,8 @@ importers:
         specifier: 2.7.5
         version: 2.7.5(@types/react@19.0.10)(framer-motion@11.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(tailwindcss@3.4.17)
       '@mjw324/prisma-shared':
-        specifier: ^1.0.14
-        version: 1.0.14(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
+        specifier: ^1.0.15
+        version: 1.0.15(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
       '@prisma/client':
         specifier: ^6.16.2
         version: 6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
@@ -1239,8 +1239,8 @@ packages:
   '@levischuck/tiny-cbor@0.2.11':
     resolution: {integrity: sha512-llBRm4dT4Z89aRsm6u2oEZ8tfwL/2l6BwpZ7JcyieouniDECM5AqNgr/y08zalEIvW3RSK4upYyybDcmjXqAow==}
 
-  '@mjw324/prisma-shared@1.0.14':
-    resolution: {integrity: sha512-GMrjd+ZsaeGNPbkz6Mw5/S+wFrBb0wp9z1kjPKhtrXzkowcuBT54rUEeIFi7O1G2ZkCNduVKKoNCdaYtKsClvA==}
+  '@mjw324/prisma-shared@1.0.15':
+    resolution: {integrity: sha512-r722802Rvuqt2rLs7TKr7kQ1cZrJesS0iGNSbD/BHqAXqGFBSOgT2nE3pC/reJ3CtzIlkBV2zohumM1DuFIeKA==}
 
   '@next/env@15.5.4':
     resolution: {integrity: sha512-27SQhYp5QryzIT5uO8hq99C69eLQ7qkzkDPsk3N+GuS2XgOgoYEeOav7Pf8Tn4drECOVDsDg8oj+/DVy8qQL2A==}
@@ -5780,7 +5780,7 @@ snapshots:
 
   '@levischuck/tiny-cbor@0.2.11': {}
 
-  '@mjw324/prisma-shared@1.0.14(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)':
+  '@mjw324/prisma-shared@1.0.15(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)':
     dependencies:
       '@prisma/client': 6.16.2(prisma@6.16.2(typescript@5.7.3))(typescript@5.7.3)
     transitivePeerDependencies:
