@@ -9,6 +9,11 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    disableSignUp: false,
+    requireEmailVerification: true,
+    minPasswordLength: 8,
+    maxPasswordLength: 128,
+    autoSignIn: true,
     sendResetPassword: async ({ user, url, token }, request) => {
       try {
         const { html, text } = createPasswordResetEmailTemplate(url, user.name);
@@ -26,6 +31,7 @@ export const auth = betterAuth({
         throw new Error("Failed to send password reset email");
       }
     },
+    resetPasswordTokenExpiresIn: 3600,
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, url, token }, request) => {
@@ -45,6 +51,8 @@ export const auth = betterAuth({
         throw new Error("Failed to send verification email");
       }
     },
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
   },
   socialProviders: {
     github: {

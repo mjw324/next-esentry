@@ -73,16 +73,6 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       setErrors((prev) => ({ ...prev, name: undefined }));
       return;
     }
-
-    // Validate name (minimum 2 characters)
-    if (value.trim().length < 2) {
-      setErrors((prev) => ({
-        ...prev,
-        name: "Name must be at least 2 characters",
-      }));
-    } else {
-      setErrors((prev) => ({ ...prev, name: undefined }));
-    }
   };
 
   // Validate email in real-time
