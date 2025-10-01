@@ -6,12 +6,10 @@ import { Faq } from "@/components/home/Faq";
 import { Cta } from "@/components/home/Cta";
 import { FeaturedDeals } from "@/components/home/FeaturedDeals";
 import { benefitOne, benefitTwo } from "@/components/data";
-import { InitialRedirect } from "@/components/InitialRedirect";
 
 export default async function Home() {
   return (
     <Container>
-      <InitialRedirect />
       <Hero />
 
       <div className="hidden lg:block">
