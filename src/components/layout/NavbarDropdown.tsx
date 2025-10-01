@@ -11,11 +11,12 @@ import {
   User,
 } from "@heroui/react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export function NavbarDropdown() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <Dropdown placement="bottom-end">
@@ -58,7 +59,19 @@ export function NavbarDropdown() {
         >
           <Link href="/dashboard/preferences">Alert Preferences</Link>
         </DropdownItem>
-        <DropdownItem key="logout" color="danger" onPress={() => signOut()}>
+        <DropdownItem
+          key="logout"
+          color="danger"
+          onPress={() =>
+            signOut({
+              fetchOptions: {
+                onSuccess: () => {
+                  router.push("/login");
+                },
+              },
+            })
+          }
+        >
           Log Out
         </DropdownItem>
       </DropdownMenu>

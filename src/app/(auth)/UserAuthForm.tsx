@@ -222,6 +222,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
               title: "Login Successful",
               description: "Redirecting to dashboard...",
               color: "success",
+              timeout: 1000,
             });
             router.push(callbackUrl);
           } else {
