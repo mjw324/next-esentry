@@ -10,8 +10,12 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn, useSession, authClient } from "@/lib/auth-client";
 
-const GoogleIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+const GoogleIcon = () => (
+  <svg
+    className="w-5 h-5"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
       fill="#4285F4"
@@ -32,8 +36,12 @@ const GoogleIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const FacebookIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 2084 2084" xmlns="http://www.w3.org/2000/svg">
+const FacebookIcon = () => (
+  <svg
+    className="w-5 h-5"
+    viewBox="0 0 2084 2084"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M 1261.500 386.593 C 1175.058 390.883, 1112.196 402.246, 1053.782 424.139 C 899.088 482.116, 815.015 606.859, 795.073 808 C 791.417 844.872, 790.871 861.373, 790.302 952.250 L 789.740 1042 682.870 1042 L 576 1042 576 1201.500 L 576 1361 683 1361 L 790 1361 790 1707.500 C 790 1898.075, 790.112 2054, 790.250 2054.001 C 790.388 2054.001, 799.500 2056.045, 810.500 2058.542 C 859.739 2069.721, 907.394 2076.914, 964 2081.712 C 990.176 2083.931, 1088.004 2084.249, 1114 2082.199 C 1130.277 2080.916, 1154.994 2078.530, 1164.250 2077.349 L 1169 2076.742 1169 1718.871 L 1169 1361 1309.531 1361 C 1421.049 1361, 1450.156 1360.742, 1450.514 1359.750 C 1450.762 1359.063, 1463.797 1288.525, 1479.481 1203 C 1495.164 1117.475, 1508.258 1046.263, 1508.578 1044.750 L 1509.159 1042 1339.079 1042 L 1169 1042 1169 973.700 C 1169 936.135, 1169.463 899.347, 1170.029 891.950 C 1174.004 839.999, 1184.893 802.512, 1204.720 772.528 C 1213.264 759.607, 1230.086 742.710, 1242.953 734.124 C 1272.283 714.553, 1307.005 703.937, 1358.500 698.797 C 1383.262 696.326, 1500.735 697.640, 1521.750 700.624 L 1526 701.227 1526 556.652 L 1526 412.077 1521.750 410.927 C 1491.730 402.806, 1424.954 393.582, 1359 388.445 C 1340.770 387.026, 1277.141 385.817, 1261.500 386.593"
       stroke="none"
@@ -100,7 +108,8 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
     }
   }, [searchParams, router]);
 
-  const areButtonsDisabled = loading.form || loading.github || loading.google || loading.facebook;
+  const areButtonsDisabled =
+    loading.form || loading.github || loading.google || loading.facebook;
 
   const callbackUrl = "/dashboard";
 
@@ -438,40 +447,40 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
       </div>
 
       <div className="flex flex-col gap-3 pb-3">
+        <Button
+          onPress={signInWithProvider("google")}
+          fullWidth
+          variant="flat"
+          startContent={<GoogleIcon />}
+          isLoading={loading.google}
+          isDisabled={areButtonsDisabled}
+        >
+          Google
+        </Button>
         <div className="flex gap-2">
-          <Button
-            onPress={signInWithProvider("google")}
-            fullWidth
-            variant="flat"
-            startContent={<GoogleIcon className="w-5 h-5" />}
-            isLoading={loading.google}
-            isDisabled={areButtonsDisabled}
-          >
-            Google
-          </Button>
           <Button
             onPress={signInWithProvider("github")}
             fullWidth
             variant="flat"
             startContent={
-              <FontAwesomeIcon icon={faGithub} className="w-5 h-5" />
+              <FontAwesomeIcon className="w-5 h-5" icon={faGithub} />
             }
             isLoading={loading.github}
             isDisabled={areButtonsDisabled}
           >
             Github
           </Button>
+          <Button
+            onPress={signInWithProvider("facebook")}
+            fullWidth
+            variant="flat"
+            startContent={<FacebookIcon />}
+            isLoading={loading.facebook}
+            isDisabled={areButtonsDisabled}
+          >
+            Facebook
+          </Button>
         </div>
-        <Button
-          onPress={signInWithProvider("facebook")}
-          fullWidth
-          variant="flat"
-          startContent={<FacebookIcon className="w-5 h-5" />}
-          isLoading={loading.facebook}
-          isDisabled={areButtonsDisabled}
-        >
-          Facebook
-        </Button>
       </div>
     </>
   );
