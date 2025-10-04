@@ -63,7 +63,9 @@ interface AlertPreferencesClientProps {
   initialSession?: any;
 }
 
-export default function AlertPreferencesClient({ initialSession }: AlertPreferencesClientProps) {
+export default function AlertPreferencesClient({
+  initialSession,
+}: AlertPreferencesClientProps) {
   const router = useRouter();
   const { data: clientSession } = useSession();
 
@@ -487,7 +489,9 @@ export default function AlertPreferencesClient({ initialSession }: AlertPreferen
             <div className="relative flex items-center gap-2 justify-end">
               {item.status === "active" && (
                 <Tooltip content="This is your active alert email">
-                  <span className="text-gray-300">—</span>
+                  <span className="text-foreground-500 font-extrabold px-2">
+                    —
+                  </span>
                 </Tooltip>
               )}
 

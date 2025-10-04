@@ -3,7 +3,6 @@ import { Slider, Tooltip, Input } from "@heroui/react";
 import cn from "@/utils/cn";
 import { Info } from "lucide-react";
 
-
 interface PriceRangeSliderProps {
   value: [number | undefined, number | undefined];
   onChange: (value: [number | undefined, number | undefined]) => void;
@@ -182,6 +181,8 @@ export default function PriceRangeSlider({
               size="sm"
               value={tempInputs[0]}
               placeholder="-"
+              name="price-min"
+              autoComplete="off"
               onChange={(e) => handleInputChange(0, e.target.value)}
               onBlur={() => handleInputCommit(0)}
               onKeyDown={(e) => e.key === "Enter" && handleInputCommit(0)}
@@ -204,6 +205,8 @@ export default function PriceRangeSlider({
               size="sm"
               value={tempInputs[1]}
               placeholder="-"
+              name="price-max"
+              autoComplete="off"
               onChange={(e) => handleInputChange(1, e.target.value)}
               onBlur={() => handleInputCommit(1)}
               onKeyDown={(e) => e.key === "Enter" && handleInputCommit(1)}
