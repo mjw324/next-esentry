@@ -1,4 +1,6 @@
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { SESClient, SendRawEmailCommand } from "@aws-sdk/client-ses";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 const sesClient = new SESClient({
   region: process.env.AWS_REGION || "us-east-1",
@@ -17,33 +19,66 @@ interface SendEmailParams {
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
   const fromEmail = process.env.AWS_SES_FROM_EMAIL;
-
   if (!fromEmail) {
     throw new Error("AWS_SES_FROM_EMAIL environment variable is not set");
   }
 
-  const command = new SendEmailCommand({
-    Source: fromEmail,
-    Destination: {
-      ToAddresses: [to],
-    },
-    Message: {
-      Subject: {
-        Data: subject,
-        Charset: "UTF-8",
-      },
-      Body: {
-        Html: {
-          Data: html,
-          Charset: "UTF-8",
-        },
-        ...(text && {
-          Text: {
-            Data: text,
-            Charset: "UTF-8",
-          },
-        }),
-      },
+  // Read the logo file from public directory
+  const logoPath = join(
+    process.cwd(),
+    "public",
+    "img",
+    "esentry-name-icon-light.svg"
+  );
+  const logoData = readFileSync(logoPath);
+  const logoBase64 = logoData.toString("base64");
+
+  // Create MIME email with inline image
+  const boundary = `----=_Part${Date.now()}`;
+  const altBoundary = `----=_Alt${Date.now()}`;
+
+  const rawMessage = [
+    `From: ${fromEmail}`,
+    `To: ${to}`,
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/related; boundary="${boundary}"`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: multipart/alternative; boundary="${altBoundary}"`,
+    ``,
+    ...(text
+      ? [
+          `--${altBoundary}`,
+          `Content-Type: text/plain; charset=UTF-8`,
+          `Content-Transfer-Encoding: 7bit`,
+          ``,
+          text,
+          ``,
+        ]
+      : []),
+    `--${altBoundary}`,
+    `Content-Type: text/html; charset=UTF-8`,
+    `Content-Transfer-Encoding: 7bit`,
+    ``,
+    html,
+    ``,
+    `--${altBoundary}--`,
+    ``,
+    `--${boundary}`,
+    `Content-Type: image/svg+xml; name="logo.svg"`,
+    `Content-Transfer-Encoding: base64`,
+    `Content-ID: <logo>`,
+    `Content-Disposition: inline; filename="logo.svg"`,
+    ``,
+    logoBase64,
+    ``,
+    `--${boundary}--`,
+  ].join("\r\n");
+
+  const command = new SendRawEmailCommand({
+    RawMessage: {
+      Data: Buffer.from(rawMessage),
     },
   });
 
@@ -57,134 +92,201 @@ export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
   }
 }
 
-export function createVerificationEmailTemplate(verificationUrl: string, userName?: string) {
+export function createVerificationEmailTemplate(
+  verificationUrl: string,
+  userName?: string
+) {
+  const displayName = userName || "there";
+
   const html = `
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
-      <meta charset="utf-8">
+      <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Verify Your Email Address</title>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <title>Verify Email Address</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     </head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">Verify Your Email</h1>
-      </div>
-
-      <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
-        <h2 style="color: #495057; margin-top: 0;">Hello${userName ? ` ${userName}` : ''}!</h2>
-
-        <p style="font-size: 16px; margin-bottom: 20px;">
-          Thank you for signing up! To complete your registration and verify your email address, please click the button below:
-        </p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${verificationUrl}"
-             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 15px 30px;
-                    text-decoration: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 16px;
-                    display: inline-block;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            Verify Email Address
-          </a>
-        </div>
-
-        <p style="font-size: 14px; color: #6c757d; margin-top: 30px;">
-          If the button doesn't work, you can also copy and paste this link into your browser:
-        </p>
-        <p style="font-size: 14px; color: #007bff; word-break: break-all; background: #f8f9fa; padding: 10px; border-radius: 5px; border: 1px solid #dee2e6;">
-          ${verificationUrl}
-        </p>
-
-        <hr style="border: none; border-top: 1px solid #dee2e6; margin: 30px 0;">
-
-        <p style="font-size: 12px; color: #6c757d; text-align: center; margin: 0;">
-          This verification link will expire in 24 hours. If you didn't create an account, you can safely ignore this email.
-        </p>
-      </div>
+    <body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f9fafb;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb;">
+        <tr>
+          <td align="center" style="padding: 40px 20px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+              
+              <!-- Logo Section -->
+              <tr>
+                <td align="center" style="padding: 48px 40px 32px 40px;">
+                  <img src="cid:logo" alt="eSentry" style="height: 40px; display: block;" />
+                </td>
+              </tr>
+              
+              <!-- Header -->
+              <tr>
+                <td align="center" style="padding: 0 40px 24px 40px;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; line-height: 1.3;">
+                    Verify Email Address
+                  </h1>
+                </td>
+              </tr>
+              
+              <!-- Body Content -->
+              <tr>
+                <td style="padding: 0 40px 32px 40px;">
+                  <p style="margin: 0 0 16px 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                    Hi ${displayName},
+                  </p>
+                  <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                    We received your request to verify your email address. Tap the link below to verify this email address and start using eSentry.
+                  </p>
+                </td>
+              </tr>
+              
+              <!-- Button -->
+              <tr>
+                <td align="center" style="padding: 0 40px 48px 40px;">
+                  <a href="${verificationUrl}" style="display: inline-block; padding: 14px 32px; background-color: #000000; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 500; border-radius: 6px; transition: background-color 0.2s;">
+                    Verify Email
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- Footer -->
+              <tr>
+                <td style="padding: 32px 40px; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5;">
+                    If you didn't request this email, you can safely ignore it.
+                  </p>
+                </td>
+              </tr>
+              
+            </table>
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
   `;
 
   const text = `
-    Hello${userName ? ` ${userName}` : ''}!
+    eSentry
 
-    Thank you for signing up! To complete your registration and verify your email address, please visit the following link:
+    Verify Email Address
+
+    Hi ${displayName},
+
+    We received your request to verify your email address. Tap the link below to verify this email address and start using eSentry.
 
     ${verificationUrl}
 
-    This verification link will expire in 24 hours. If you didn't create an account, you can safely ignore this email.
-  `;
+    If you didn't request this email, you can safely ignore it.
+
+    ---
+    eSentry
+  `.trim();
 
   return { html, text };
 }
 
-export function createPasswordResetEmailTemplate(resetUrl: string, userName?: string) {
+export function createPasswordResetEmailTemplate(
+  resetUrl: string,
+  userName?: string
+) {
+  const displayName = userName || "there";
+
   const html = `
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
     <head>
-      <meta charset="utf-8">
+      <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <title>Reset Your Password</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     </head>
-    <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-      <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">Reset Your Password</h1>
-      </div>
-
-      <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e9ecef;">
-        <h2 style="color: #495057; margin-top: 0;">Hello${userName ? ` ${userName}` : ''}!</h2>
-
-        <p style="font-size: 16px; margin-bottom: 20px;">
-          We received a request to reset your password. If you made this request, click the button below to set a new password:
-        </p>
-
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${resetUrl}"
-             style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-                    color: white;
-                    padding: 15px 30px;
-                    text-decoration: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 16px;
-                    display: inline-block;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-            Reset Password
-          </a>
-        </div>
-
-        <p style="font-size: 14px; color: #6c757d; margin-top: 30px;">
-          If the button doesn't work, you can also copy and paste this link into your browser:
-        </p>
-        <p style="font-size: 14px; color: #007bff; word-break: break-all; background: #f8f9fa; padding: 10px; border-radius: 5px; border: 1px solid #dee2e6;">
-          ${resetUrl}
-        </p>
-
-        <hr style="border: none; border-top: 1px solid #dee2e6; margin: 30px 0;">
-
-        <p style="font-size: 12px; color: #6c757d; text-align: center; margin: 0;">
-          This password reset link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.
-        </p>
-      </div>
+    <body style="margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f9fafb;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb;">
+        <tr>
+          <td align="center" style="padding: 40px 20px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+              
+              <!-- Logo Section -->
+              <tr>
+                <td align="center" style="padding: 48px 40px 32px 40px;">
+                  <img src="cid:logo" alt="eSentry" style="height: 40px; display: block;" />
+                </td>
+              </tr>
+              
+              <!-- Header -->
+              <tr>
+                <td align="center" style="padding: 0 40px 24px 40px;">
+                  <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #111827; line-height: 1.3;">
+                    Reset Your Password
+                  </h1>
+                </td>
+              </tr>
+              
+              <!-- Body Content -->
+              <tr>
+                <td style="padding: 0 40px 32px 40px;">
+                  <p style="margin: 0 0 16px 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                    Hi ${displayName},
+                  </p>
+                  <p style="margin: 0 0 16px 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                    We received a request to reset your password for your eSentry account. Click the button below to create a new password.
+                  </p>
+                  <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                    This link will expire in 1 hour for security reasons.
+                  </p>
+                </td>
+              </tr>
+              
+              <!-- Button -->
+              <tr>
+                <td align="center" style="padding: 0 40px 48px 40px;">
+                  <a href="${resetUrl}" style="display: inline-block; padding: 14px 32px; background-color: #000000; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 500; border-radius: 6px; transition: background-color 0.2s;">
+                    Reset Password
+                  </a>
+                </td>
+              </tr>
+              
+              <!-- Footer -->
+              <tr>
+                <td style="padding: 32px 40px; border-top: 1px solid #e5e7eb;">
+                  <p style="margin: 0; font-size: 13px; color: #6b7280; line-height: 1.5;">
+                    If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+                  </p>
+                </td>
+              </tr>
+              
+            </table>
+          </td>
+        </tr>
+      </table>
     </body>
     </html>
   `;
 
   const text = `
-    Hello${userName ? ` ${userName}` : ''}!
+    eSentry
 
-    We received a request to reset your password. If you made this request, please visit the following link to set a new password:
+    Reset Your Password
+
+    Hi ${displayName},
+
+    We received a request to reset your password for your eSentry account. Click the link below to create a new password.
 
     ${resetUrl}
 
-    This password reset link will expire in 1 hour. If you didn't request a password reset, you can safely ignore this email.
-  `;
+    If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+
+    ---
+    eSentry
+  `.trim();
 
   return { html, text };
 }
