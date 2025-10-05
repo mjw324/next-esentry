@@ -115,7 +115,7 @@ function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
+      <div className="flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="flex flex-col gap-1 text-center pb-6">
             <div className="flex justify-center mb-2">
@@ -143,7 +143,7 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
+    <div className="flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="flex flex-col gap-1 text-center pb-2">
           <h1 className="text-2xl font-bold">Reset your password</h1>
@@ -301,7 +301,7 @@ function ResetPasswordForm() {
 export default function ResetPasswordPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20">
+      <div className="flex items-center justify-center bg-gradient-to-br from-background to-muted/20">
         <Spinner size="lg" />
       </div>
     }>

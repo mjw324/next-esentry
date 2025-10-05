@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input } from "@heroui/react";
+import { Button, Input, Progress, Chip } from "@heroui/react";
 import { addToast } from "@heroui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState, useEffect } from "react";
@@ -59,7 +59,10 @@ const FacebookIcon = () => (
 
 const passwordSchema = z
   .string()
-  .min(8, "Password must be at least 8 characters");
+  .min(8, "Password must be at least 8 characters")
+  .regex(/(?=.*[a-z])/, "Password must contain at least one lowercase letter")
+  .regex(/(?=.*[A-Z])/, "Password must contain at least one uppercase letter")
+  .regex(/(?=.*\d)/, "Password must contain at least one number");
 
 export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   const router = useRouter();
@@ -71,6 +74,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
   const [errors, setErrors] = useState<{
     name?: string;
     email?: string;
@@ -108,10 +112,36 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
     }
   }, [searchParams, router]);
 
+  // Calculate password strength for registration mode
+  useEffect(() => {
+    if (mode === "register") {
+      let strength = 0;
+      if (password.length >= 8) strength += 25;
+      if (/[a-z]/.test(password)) strength += 25;
+      if (/[A-Z]/.test(password)) strength += 25;
+      if (/\d/.test(password)) strength += 25;
+      setPasswordStrength(strength);
+    }
+  }, [password, mode]);
+
   const areButtonsDisabled =
     loading.form || loading.github || loading.google || loading.facebook;
 
   const callbackUrl = "/dashboard";
+
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength <= 25) return "danger";
+    if (passwordStrength <= 50) return "warning";
+    if (passwordStrength <= 75) return "primary";
+    return "success";
+  };
+
+  const getPasswordStrengthLabel = () => {
+    if (passwordStrength <= 25) return "Weak";
+    if (passwordStrength <= 50) return "Fair";
+    if (passwordStrength <= 75) return "Good";
+    return "Strong";
+  };
 
   // Handle name change with validation
   const handleNameChange = (value: string) => {
@@ -200,7 +230,19 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
     // Validate password
     if (!password) {
       newErrors.password = "Password is required";
+    } else if (mode === "register") {
+      // Use stricter validation for registration
+      if (password.length < 8) {
+        newErrors.password = "Password must be at least 8 characters long";
+      } else if (!/(?=.*[a-z])/.test(password)) {
+        newErrors.password = "Password must contain at least one lowercase letter";
+      } else if (!/(?=.*[A-Z])/.test(password)) {
+        newErrors.password = "Password must contain at least one uppercase letter";
+      } else if (!/(?=.*\d)/.test(password)) {
+        newErrors.password = "Password must contain at least one number";
+      }
     } else {
+      // For login, just check minimum length
       const passwordResult = passwordSchema.safeParse(password);
       if (!passwordResult.success) {
         newErrors.password = passwordResult.error.issues[0].message;
@@ -367,7 +409,7 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
           <Input
             type={showPassword ? "text" : "password"}
             value={password}
@@ -389,6 +431,48 @@ export function UserAuthForm({ mode }: { mode: "login" | "register" }) {
               </button>
             }
           />
+          {mode === "register" && password && (
+            <div className="space-y-2">
+              <Progress
+                size="sm"
+                value={passwordStrength}
+                color={getPasswordStrengthColor()}
+                className="max-w-md"
+                label={`Strength: ${getPasswordStrengthLabel()}`}
+                showValueLabel={false}
+              />
+              <div className="flex flex-wrap gap-1">
+                <Chip
+                  size="sm"
+                  color={password.length >= 8 ? "success" : "default"}
+                  variant={password.length >= 8 ? "flat" : "bordered"}
+                >
+                  8+ characters
+                </Chip>
+                <Chip
+                  size="sm"
+                  color={/[a-z]/.test(password) ? "success" : "default"}
+                  variant={/[a-z]/.test(password) ? "flat" : "bordered"}
+                >
+                  Lowercase
+                </Chip>
+                <Chip
+                  size="sm"
+                  color={/[A-Z]/.test(password) ? "success" : "default"}
+                  variant={/[A-Z]/.test(password) ? "flat" : "bordered"}
+                >
+                  Uppercase
+                </Chip>
+                <Chip
+                  size="sm"
+                  color={/\d/.test(password) ? "success" : "default"}
+                  variant={/\d/.test(password) ? "flat" : "bordered"}
+                >
+                  Number
+                </Chip>
+              </div>
+            </div>
+          )}
         </div>
 
         {mode === "register" && (
