@@ -9,7 +9,7 @@ const sesClient = new SESClient({
 });
 
 
-const ESENTRY_LOGO_URL = "https://jerivdh89r3zqerl.public.blob.vercel-storage.com/esentry-name-icon-light.svg";
+const ESENTRY_LOGO_URL = "https://jerivdh89r3zqerl.public.blob.vercel-storage.com/esentry-name-icon-light.png";
 
 interface SendEmailParams {
   to: string;
