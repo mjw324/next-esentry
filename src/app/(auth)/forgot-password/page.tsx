@@ -1,104 +1,117 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button, Input, Card, CardBody, CardHeader } from "@heroui/react";
-import { addToast } from "@heroui/toast";
-import Link from "next/link";
-import { z } from "zod";
-
-const emailSchema = z.string().trim().email("Please enter a valid email address");
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Card, CardBody, CardHeader, Input, Button, Divider } from '@heroui/react';
+import { Mail } from 'lucide-react';
+import { authClient } from '@/lib/auth-client'; // Adjust path to your auth client
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validate email
-    const result = emailSchema.safeParse(email);
-    if (!result.success) {
-      setEmailError(result.error.issues[0].message);
-      return;
-    }
-
-    setEmailError("");
-    setIsSubmitting(true);
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const { data, error } = await authClient.requestPasswordReset({
+        email,
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to process request");
+      if (error) {
+        setError(error.message || 'Failed to send reset email');
+        return;
       }
 
-      setIsSuccess(true);
-    } catch (error) {
-      addToast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Something went wrong",
-        color: "danger"
-      });
+      setSuccess(true);
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
-  return (
-    <div className="p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="flex justify-center pb-2">
-          <h1 className="text-2xl font-bold">Reset Your Password</h1>
-        </CardHeader>
-        <CardBody className="flex flex-col gap-4">
-          {isSuccess ? (
-            <div className="text-center py-6">
-              <h2 className="text-xl font-semibold mb-4">Check Your Email</h2>
-              <p className="text-gray-600 mb-6">
-                If an account exists with {email}, we&apos;ve sent instructions to reset your password.
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="flex flex-col gap-1 text-center pb-6">
+            <h1 className="text-2xl font-bold">Check your email</h1>
+          </CardHeader>
+          <CardBody className="gap-4">
+            <div className="bg-success-50 dark:bg-success-100/10 border border-success-200 dark:border-success-100/20 rounded-lg p-4">
+              <p className="text-sm text-success-600 dark:text-success">
+                We&apos;ve sent a password reset link to <span className="font-medium">{email}</span>. 
+                Please check your email and follow the instructions.
               </p>
+            </div>
+            <div className="text-center pt-2">
               <Link href="/login">
-                <Button color="primary">Back to Login</Button>
+                <Button color="primary" variant="light" size="sm">
+                  Return to login
+                </Button>
               </Link>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <p className="text-gray-600">
-                Enter the email associated with your account and we&apos;ll send you instructions to reset your password.
-              </p>
-              <Input
-                type="email"
-                label="Email Address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                isInvalid={!!emailError}
-                errorMessage={emailError}
-              />
-              <div className="pt-2">
-                <Button
-                  type="submit"
-                  color="primary"
-                  fullWidth
-                  isLoading={isSubmitting}
-                >
-                  Send Reset Instructions
-                </Button>
-                <div className="mt-4 text-center">
-                  <Link href="/login" className="text-primary hover:underline">
-                    Back to Login
-                  </Link>
-                </div>
-              </div>
-            </form>
-          )}
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted/20 p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="flex flex-col gap-1 text-center pb-2">
+          <h1 className="text-2xl font-bold">Forgot your password?</h1>
+          <p className="text-small text-default-500">
+            Enter your email address and we&apos;ll send you a link to reset your password
+          </p>
+        </CardHeader>
+        <Divider />
+        <CardBody>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <Input
+              autoFocus
+              endContent={
+                <Mail className="text-default-400 pointer-events-none flex-shrink-0" size={18} />
+              }
+              label="Email"
+              placeholder="john.doe@example.com"
+              variant="bordered"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              isRequired
+              isInvalid={!!error}
+              errorMessage={error}
+              classNames={{
+                label: "text-black/50 dark:text-white/90",
+              }}
+            />
+
+            <Button
+              type="submit"
+              color="primary"
+              isLoading={isLoading}
+              className="w-full"
+            >
+              Send reset email
+            </Button>
+
+            <div className="text-center text-small">
+              <span className="text-default-500">Remember your password? </span>
+              <Link href="/login" className="text-primary hover:underline">
+                Sign in
+              </Link>
+            </div>
+          </form>
         </CardBody>
       </Card>
     </div>
