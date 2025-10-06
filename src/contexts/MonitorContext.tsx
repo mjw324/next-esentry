@@ -23,6 +23,7 @@ export interface Monitor {
   minPrice?: number;
   maxPrice?: number;
   condition?: string[];
+  monitorInterval?: number;
 }
 
 interface MonitorContextType {

@@ -143,6 +143,7 @@ export default function MonitorGrid() {
         initialSellers={editingMonitor?.sellers || []}
         minPrice={editingMonitor?.minPrice}
         maxPrice={editingMonitor?.maxPrice}
+        initialMonitorInterval={editingMonitor?.monitorInterval}
       />
     </div>
   );

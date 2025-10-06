@@ -10,7 +10,9 @@ import {
   Button,
   Spacer,
   Divider,
+  Slider,
 } from "@heroui/react";
+import type { SliderValue } from "@heroui/react";
 import PriceRangeSlider from "./PriceRangeSlider";
 import ChipInput from "./ChipInput";
 import ConditionCheckboxGroup from "./ConditionCheckboxGroup";
@@ -26,6 +28,7 @@ interface EbayMonitorModalProps {
   initialSellers?: string[];
   minPrice?: number;
   maxPrice?: number;
+  initialMonitorInterval?: number;
 }
 
 interface MonitorData {
@@ -35,6 +38,7 @@ interface MonitorData {
   sellers?: string[];
   minPrice?: number;
   maxPrice?: number;
+  monitorInterval?: number;
 }
 
 function BaseEbayMonitorModal({
@@ -47,6 +51,7 @@ function BaseEbayMonitorModal({
   initialSellers = [],
   minPrice,
   maxPrice,
+  initialMonitorInterval,
   onSave,
   isSubmitting = false,
 }: EbayMonitorModalProps & {
@@ -62,10 +67,31 @@ function BaseEbayMonitorModal({
   const [priceRange, setPriceRange] = useState<
     [number | undefined, number | undefined]
   >([minPrice, maxPrice]);
+  const [monitorInterval, setMonitorInterval] = useState<number>(
+    initialMonitorInterval || 7200000 // Default to 2 hours
+  );
   const [loading, setLoading] = useState(false);
   const [keywordError, setKeywordError] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string>("");
   const [modalSize, setModalSize] = useState<"lg" | "xl" | "full">("lg");
+
+  // Helper function to format milliseconds to HH:MM:SS
+  const formatMillisecondsToHHMMSS = (milliseconds: number) => {
+    if (isNaN(milliseconds) || milliseconds < 0) {
+      return "00:00:00"; // Default for invalid input
+    }
+
+    let totalSeconds = Math.floor(milliseconds / 1000);
+    let hours = Math.floor(totalSeconds / 3600);
+
+    totalSeconds %= 3600;
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+
+    const pad = (num: number) => String(num).padStart(2, "0");
+
+    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+  };
 
   const isLoading = loading || isSubmitting;
 
@@ -94,6 +120,7 @@ function BaseEbayMonitorModal({
     setCondition(initialCondition);
     setSellers(initialSellers);
     setPriceRange([minPrice, maxPrice]);
+    setMonitorInterval(initialMonitorInterval || 7200000);
     setKeywordError("");
     setDuplicateError("");
   }, [
@@ -104,6 +131,7 @@ function BaseEbayMonitorModal({
     initialSellers,
     minPrice,
     maxPrice,
+    initialMonitorInterval,
   ]);
 
   const validateMonitor = (): boolean => {
@@ -143,6 +171,7 @@ function BaseEbayMonitorModal({
       sellers,
       minPrice: priceRange[0],
       maxPrice: priceRange[1],
+      monitorInterval,
     };
 
     if (isDemo) {
@@ -216,6 +245,19 @@ function BaseEbayMonitorModal({
                 values={sellers}
                 setValues={setSellers}
                 chipColor="primary"
+              />
+              <Divider />
+              <Slider
+                hideValue
+                showTooltip
+                value={monitorInterval}
+                onChange={(value: SliderValue) => setMonitorInterval(value as number)}
+                getTooltipValue={(value: SliderValue) => formatMillisecondsToHHMMSS(value as number)}
+                label="Monitor Interval (hh:mm:ss)"
+                minValue={300000} // 5 minutes in milliseconds
+                maxValue={86400000} // 24 hours in milliseconds
+                step={300000} // 5-minute steps
+                className="w-full"
               />
             </ModalBody>
 

@@ -6,6 +6,7 @@ interface CreateMonitorDto {
     conditions?: string[];
     sellers?: string[];
     email?: string;
+    monitorInterval?: number;
   }
   
   interface Monitor {
@@ -18,6 +19,7 @@ interface CreateMonitorDto {
     maxPrice?: number;
     condition: string[];
     email?: string;
+    monitorInterval?: number;
   }
   
   class MonitorService {
@@ -43,7 +45,8 @@ interface CreateMonitorDto {
         conditions: data.conditions || [],
         sellers: data.sellers || [],
         useLoginEmail: true,
-        email: data.email
+        email: data.email,
+        monitorInterval: data.monitorInterval
       };
   
       try {
@@ -74,9 +77,10 @@ interface CreateMonitorDto {
           minPrice: monitor.minPrice,
           maxPrice: monitor.maxPrice,
           condition: monitor.conditions || [],
-          email: responseData.emailStatus === 'verification_required' 
-            ? 'Verification required' 
+          email: responseData.emailStatus === 'verification_required'
+            ? 'Verification required'
             : undefined,
+          monitorInterval: monitor.monitorInterval,
         };
       } catch (error) {
         console.error('Error creating monitor:', error);
@@ -117,6 +121,7 @@ interface CreateMonitorDto {
               minPrice: monitor.minPrice,
               maxPrice: monitor.maxPrice,
               condition: monitor.conditions || [],
+              monitorInterval: monitor.monitorInterval,
             })),
             hasActiveEmail: !!data.hasActiveEmail
           };
@@ -133,6 +138,7 @@ interface CreateMonitorDto {
               minPrice: monitor.minPrice,
               maxPrice: monitor.maxPrice,
               condition: monitor.conditions || [],
+              monitorInterval: monitor.monitorInterval,
             })),
             hasActiveEmail: true
           };
@@ -193,6 +199,7 @@ interface CreateMonitorDto {
           minPrice: monitor.minPrice,
           maxPrice: monitor.maxPrice,
           condition: monitor.conditions || [],
+          monitorInterval: monitor.monitorInterval,
         };
       } catch (error) {
         console.error('Error updating monitor:', error);
