@@ -29,6 +29,7 @@ interface MonitorTileProps {
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
+  onView?: () => void;
 }
 
 type ConditionType = "new" | "used";
@@ -81,6 +82,7 @@ export default function MonitorTile({
   onToggle,
   onEdit,
   onDelete,
+  onView,
 }: MonitorTileProps) {
   return (
     <Card className="w-full h-full mx-auto transition-all duration-200 hover:shadow-lg">
@@ -98,7 +100,10 @@ export default function MonitorTile({
             <div className="h-4 w-px bg-neutral-200 mx-2" />
             <div className="flex items-center gap-2">
               <StatusIndicator isActive={isActive} />
-              <p className="text-md lg:text-lg font-bold">
+              <p
+                className={`text-md lg:text-lg font-bold ${onView ? 'cursor-pointer hover:text-primary transition-colors' : ''}`}
+                onClick={onView}
+              >
                 {keywords.join(" ")}
               </p>
             </div>

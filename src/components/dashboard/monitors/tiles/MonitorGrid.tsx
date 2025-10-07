@@ -29,11 +29,7 @@ export default function MonitorGrid() {
   const closeModal = () => setIsModalOpen(false);
 
   const handleEdit = (id: string) => {
-    const monitorToEdit = monitors.find((m) => m.id === id);
-    if (monitorToEdit) {
-      setEditingMonitor(monitorToEdit);
-      openModal();
-    }
+    router.push(`/monitors/${id}`);
   };
 
   const handleModalClose = () => {
@@ -128,6 +124,7 @@ export default function MonitorGrid() {
             onToggle={() => handleToggle(monitor.id)}
             onEdit={() => handleEdit(monitor.id)}
             onDelete={() => handleDelete(monitor.id)}
+            onView={() => router.push(`/monitors/${monitor.id}`)}
           />
         ))}
         <AddMonitorTile onClick={openModal} />
