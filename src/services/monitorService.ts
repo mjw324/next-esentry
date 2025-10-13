@@ -46,7 +46,7 @@ interface CreateMonitorDto {
         sellers: data.sellers || [],
         useLoginEmail: true,
         email: data.email,
-        monitorInterval: data.monitorInterval
+        interval: data.monitorInterval
       };
   
       try {
@@ -165,6 +165,7 @@ interface CreateMonitorDto {
             ? (updates.isActive ? 'active' : 'inactive') 
             : undefined,
           conditions: updates.condition, // Map condition to conditions
+          interval: updates.monitorInterval, // Map monitorInterval to interval
         };
   
         if (backendUpdates.isActive !== undefined) {
@@ -172,6 +173,9 @@ interface CreateMonitorDto {
         }
         if (backendUpdates.condition !== undefined) {
           delete backendUpdates.condition;
+        }
+        if (backendUpdates.monitorInterval !== undefined) {
+          delete backendUpdates.monitorInterval;
         }
   
         const response = await fetch(`${this.apiEndpoint}/${id}`, {
