@@ -133,8 +133,7 @@ export default function PriceRangeSlider({
         formatOptions={{ style: "currency", currency: "USD" }}
         classNames={{
           base: "gap-3",
-          filler:
-            "bg-gradient-to-r from-primary-300 to-success-300 dark:from-primary-600 dark:to-success-800",
+          filler: "bg-[#1dd49e]",
         }}
         renderLabel={({ children, ...props }) => (
           <label
@@ -165,12 +164,7 @@ export default function PriceRangeSlider({
             className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
           >
             <span
-              className={cn(
-                "transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75",
-                index === 0
-                  ? "bg-gradient-to-br from-primary-300 to-primary-800"
-                  : "bg-gradient-to-br from-success-400 to-success-900"
-              )}
+              className="transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75 bg-[#1dd49e]"
             />
           </div>
         )}

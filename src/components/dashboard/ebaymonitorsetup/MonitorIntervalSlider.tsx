@@ -55,8 +55,7 @@ export default function MonitorIntervalSlider({
       }
       classNames={{
         base: "gap-3",
-        filler:
-          "bg-gradient-to-r from-secondary-300 to-primary-300 dark:from-secondary-600 dark:to-primary-600 data-[fill-start=true]:border-s-transparent",
+        filler: "bg-[#4c94fb]",
       }}
       renderLabel={({ children, ...props }) => (
         <label
@@ -90,10 +89,7 @@ export default function MonitorIntervalSlider({
           className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
         >
           <span
-            className={cn(
-              "transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75",
-              "bg-gradient-to-br from-secondary-400 to-primary-600"
-            )}
+            className="transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75 bg-[#4c94fb]"
           />
         </div>
       )}
