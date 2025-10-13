@@ -35,6 +35,7 @@ import { addToast } from "@heroui/toast";
 import PriceRangeSlider from "@/components/dashboard/ebaymonitorsetup/PriceRangeSlider";
 import ChipInput from "@/components/dashboard/ebaymonitorsetup/ChipInput";
 import ConditionCheckboxGroup from "@/components/dashboard/ebaymonitorsetup/ConditionCheckboxGroup";
+import MonitorIntervalSlider from "@/components/dashboard/ebaymonitorsetup/MonitorIntervalSlider";
 
 type ConditionColorType = "success" | "warning" | "secondary";
 
@@ -105,22 +106,23 @@ export default function MonitorPage() {
   const [keywordError, setKeywordError] = useState<string>("");
   const [duplicateError, setDuplicateError] = useState<string>("");
 
-  // Helper function to format milliseconds to HH:MM:SS
-  const formatMillisecondsToHHMMSS = (milliseconds: number) => {
+  // Helper function to format milliseconds to readable time (hours and minutes only)
+  const formatMillisecondsToReadable = (milliseconds: number): string => {
     if (isNaN(milliseconds) || milliseconds < 0) {
-      return "00:00:00";
+      return "0 minutes";
     }
 
-    let totalSeconds = Math.floor(milliseconds / 1000);
-    let hours = Math.floor(totalSeconds / 3600);
+    const totalMinutes = Math.floor(milliseconds / (1000 * 60));
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
 
-    totalSeconds %= 3600;
-    let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
-
-    const pad = (num: number) => String(num).padStart(2, "0");
-
-    return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    if (hours === 0) {
+      return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    } else if (minutes === 0) {
+      return `${hours} hour${hours !== 1 ? 's' : ''}`;
+    } else {
+      return `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    }
   };
 
   // Initialize form when monitor loads or editing starts
@@ -378,17 +380,9 @@ export default function MonitorPage() {
 
               <Divider />
 
-              <Slider
-                hideValue
-                showTooltip
+              <MonitorIntervalSlider
                 value={monitorInterval}
-                onChange={(value: SliderValue) => setMonitorInterval(value as number)}
-                getTooltipValue={(value: SliderValue) => formatMillisecondsToHHMMSS(value as number)}
-                label="Monitor Interval (hh:mm:ss)"
-                minValue={300000} // 5 minutes in milliseconds
-                maxValue={86400000} // 24 hours in milliseconds
-                step={300000} // 5-minute steps
-                className="w-full"
+                onChange={setMonitorInterval}
               />
             </div>
           ) : (
@@ -496,7 +490,7 @@ export default function MonitorPage() {
                   <div>
                     <h3 className="text-md font-semibold mb-2">Monitor Interval</h3>
                     <p className="text-default-600">
-                      Check every {formatMillisecondsToHHMMSS(monitor.monitorInterval)}
+                      Check every {formatMillisecondsToReadable(monitor.monitorInterval)}
                     </p>
                   </div>
                 </>
