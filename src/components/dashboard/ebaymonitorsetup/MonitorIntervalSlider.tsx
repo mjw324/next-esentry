@@ -38,6 +38,7 @@ export default function MonitorIntervalSlider({
 
   return (
     <Slider
+      label="Check Frequency"
       value={value}
       onChange={handleChange}
       minValue={300000} // 5 minutes in milliseconds
@@ -49,11 +50,13 @@ export default function MonitorIntervalSlider({
       }}
       hideValue
       showTooltip
-      getTooltipValue={(value: SliderValue) => formatIntervalTime(value as number)}
+      getTooltipValue={(value: SliderValue) =>
+        formatIntervalTime(value as number)
+      }
       classNames={{
         base: "gap-3",
         filler:
-          "bg-gradient-to-r from-secondary-300 to-primary-300 dark:from-secondary-600 dark:to-primary-600",
+          "bg-gradient-to-r from-secondary-300 to-primary-300 dark:from-secondary-600 dark:to-primary-600 data-[fill-start=true]:border-s-transparent",
       }}
       renderLabel={({ children, ...props }) => (
         <label
@@ -61,14 +64,15 @@ export default function MonitorIntervalSlider({
           className="block text-small font-medium text-foreground flex gap-2 items-center"
         >
           <Clock className="w-4 h-4 text-default-600" />
-          Check Frequency
+          {children}
           <Tooltip
             className="w-[250px] px-1.5 text-small text-default-600 rounded-small"
             content={
               <div className="text-left">
                 <p>How often should we check for new listings?</p>
                 <p className="text-tiny text-default-500 mt-1">
-                  More frequent checks mean faster notifications but use more resources.
+                  More frequent checks mean faster notifications but use more
+                  resources.
                 </p>
               </div>
             }
