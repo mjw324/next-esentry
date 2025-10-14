@@ -13,7 +13,6 @@ import {
   Spacer,
   Tooltip,
 } from "@heroui/react";
-import type { SliderValue } from "@heroui/react";
 import {
   Play,
   Pause,
@@ -29,7 +28,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEbay } from "@fortawesome/free-brands-svg-icons";
 import { useMonitors, type Monitor } from "@/contexts/MonitorContext";
-import { addToast } from "@heroui/toast";
 
 // Import the form components from the modal
 import PriceRangeSlider from "@/components/dashboard/ebaymonitorsetup/PriceRangeSlider";
@@ -127,7 +125,7 @@ export default function MonitorPage() {
 
   // Initialize form when monitor loads or editing starts
   useEffect(() => {
-    if (monitor && isEditing) {
+    if (monitor) {
       setKeywords(monitor.keywords || []);
       setExcludedKeywords(monitor.excludedKeywords || []);
       setCondition(monitor.condition || []);
@@ -137,7 +135,7 @@ export default function MonitorPage() {
       setKeywordError("");
       setDuplicateError("");
     }
-  }, [monitor, isEditing]);
+  }, [monitor]);
 
   const validateMonitor = (): boolean => {
     let isValid = true;
