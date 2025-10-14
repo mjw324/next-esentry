@@ -11,7 +11,7 @@ import {
   Pause,
   Edit,
   Trash2,
-  ShoppingBag,
+  OctagonMinus,
   HandCoins,
   Store,
 } from "lucide-react";
@@ -101,7 +101,11 @@ export default function MonitorTile({
             <div className="flex items-center gap-2">
               <StatusIndicator isActive={isActive} />
               <p
-                className={`text-md lg:text-lg font-bold ${onView ? 'cursor-pointer hover:text-primary transition-colors' : ''}`}
+                className={`text-md lg:text-lg font-bold ${
+                  onView
+                    ? "cursor-pointer hover:text-primary transition-colors"
+                    : ""
+                }`}
                 onClick={onView}
               >
                 {keywords.join(" ")}
@@ -146,7 +150,10 @@ export default function MonitorTile({
         <div className="grid gap-4 text-sm lg:text-base">
           {excludedKeywords && excludedKeywords.length > 0 && (
             <div className="flex items-start gap-2">
-              <ShoppingBag size={18} className="mt-1 text-default-400" />
+              <OctagonMinus
+                size={18}
+                className="mt-1 text-default-400 flex-shrink-0"
+              />
               <p className="text-default-500">
                 <span className="font-semibold">Excluded:</span>{" "}
                 {excludedKeywords.join(", ")}
@@ -156,7 +163,10 @@ export default function MonitorTile({
 
           {sellers && sellers.length > 0 && (
             <div className="flex items-start gap-2">
-              <Store size={18} className="mt-1 text-default-400" />
+              <Store
+                size={18}
+                className="mt-1 text-default-400 flex-shrink-0"
+              />
               <p className="text-default-500">
                 <span className="font-semibold">Seller(s):</span>{" "}
                 {sellers.join(", ")}
@@ -164,16 +174,21 @@ export default function MonitorTile({
             </div>
           )}
 
-          {(minPrice !== undefined && minPrice !== null) || (maxPrice !== undefined && maxPrice !== null) ? (
+          {(minPrice !== undefined && minPrice !== null) ||
+          (maxPrice !== undefined && maxPrice !== null) ? (
             <div className="flex items-start gap-2">
-              <HandCoins size={18} className="mt-1 text-default-400" />
+              <HandCoins
+                size={18}
+                className="mt-1 text-default-400 flex-shrink-0"
+              />
               <p className="text-default-500">
                 <span className="font-semibold">Price:</span>{" "}
-                {minPrice !== undefined && minPrice !== null 
-                  ? maxPrice !== undefined && maxPrice !== null
-                    ? `$${minPrice} - $${maxPrice}` // Both min and max set
-                    : `$${minPrice}+` // Only min set
-                  : `<$${maxPrice}` // Only max set
+                {
+                  minPrice !== undefined && minPrice !== null
+                    ? maxPrice !== undefined && maxPrice !== null
+                      ? `$${minPrice} - $${maxPrice}` // Both min and max set
+                      : `$${minPrice}+` // Only min set
+                    : `<$${maxPrice}` // Only max set
                 }
               </p>
             </div>

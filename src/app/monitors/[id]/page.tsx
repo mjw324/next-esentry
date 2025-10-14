@@ -21,9 +21,12 @@ import {
   X,
   Trash2,
   ArrowLeft,
-  ShoppingBag,
+  OctagonMinus,
   HandCoins,
+  Clock,
   Store,
+  Tag,
+  CheckCircle,
 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEbay } from "@fortawesome/free-brands-svg-icons";
@@ -400,16 +403,20 @@ export default function MonitorPage() {
             /* View Mode */
             <div className="space-y-6">
               {/* Keywords */}
-              <div>
-                <h3 className="text-md font-semibold mb-3 text-success">
-                  Keywords
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {monitor.keywords.map((keyword) => (
-                    <Chip key={keyword} color="success" variant="flat">
-                      {keyword}
-                    </Chip>
-                  ))}
+              <div className="flex items-start gap-3">
+                <Tag
+                  size={20}
+                  className="mt-1 text-default-400 flex-shrink-0"
+                />
+                <div>
+                  <h3 className="text-md font-semibold mb-3">Keywords</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {monitor.keywords.map((keyword) => (
+                      <Chip key={keyword} color="success" variant="flat">
+                        {keyword}
+                      </Chip>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -419,9 +426,9 @@ export default function MonitorPage() {
                   <>
                     <Divider />
                     <div className="flex items-start gap-3">
-                      <ShoppingBag
+                      <OctagonMinus
                         size={20}
-                        className="mt-1 text-default-400"
+                        className="mt-1 text-default-400 flex-shrink-0"
                       />
                       <div>
                         <h3 className="text-md font-semibold mb-3">
@@ -446,7 +453,10 @@ export default function MonitorPage() {
                 <>
                   <Divider />
                   <div className="flex items-start gap-3">
-                    <HandCoins size={20} className="mt-1 text-default-400" />
+                    <HandCoins
+                      size={20}
+                      className="mt-1 text-default-400 flex-shrink-0"
+                    />
                     <div>
                       <h3 className="text-md font-semibold mb-2">
                         Price Range
@@ -469,18 +479,24 @@ export default function MonitorPage() {
               {monitor.condition && monitor.condition.length > 0 && (
                 <>
                   <Divider />
-                  <div>
-                    <h3 className="text-md font-semibold mb-3">Condition</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {monitor.condition.map((cond: string) => (
-                        <Chip
-                          key={cond}
-                          variant="flat"
-                          color={getConditionColor(cond)}
-                        >
-                          {formatCondition(cond)}
-                        </Chip>
-                      ))}
+                  <div className="flex items-start gap-3">
+                    <CheckCircle
+                      size={20}
+                      className="mt-1 text-default-400 flex-shrink-0"
+                    />
+                    <div>
+                      <h3 className="text-md font-semibold mb-3">Condition</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {monitor.condition.map((cond: string) => (
+                          <Chip
+                            key={cond}
+                            variant="flat"
+                            color={getConditionColor(cond)}
+                          >
+                            {formatCondition(cond)}
+                          </Chip>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </>
@@ -491,7 +507,10 @@ export default function MonitorPage() {
                 <>
                   <Divider />
                   <div className="flex items-start gap-3">
-                    <Store size={20} className="mt-1 text-default-400" />
+                    <Store
+                      size={20}
+                      className="mt-1 text-default-400 flex-shrink-0"
+                    />
                     <div>
                       <h3 className="text-md font-semibold mb-3">Sellers</h3>
                       <div className="flex flex-wrap gap-2">
@@ -510,14 +529,20 @@ export default function MonitorPage() {
               {monitor.monitorInterval && (
                 <>
                   <Divider />
-                  <div>
-                    <h3 className="text-md font-semibold mb-2">
-                      Monitor Interval
-                    </h3>
-                    <p className="text-default-600">
-                      Check every{" "}
-                      {formatMillisecondsToReadable(monitor.monitorInterval)}
-                    </p>
+                  <div className="flex items-start gap-3">
+                    <Clock
+                      size={20}
+                      className="mt-1 text-default-400 flex-shrink-0"
+                    />
+                    <div>
+                      <h3 className="text-md font-semibold mb-2">
+                        Monitor Interval
+                      </h3>
+                      <p className="text-default-600">
+                        Check every{" "}
+                        {formatMillisecondsToReadable(monitor.monitorInterval)}
+                      </p>
+                    </div>
                   </div>
                 </>
               )}
