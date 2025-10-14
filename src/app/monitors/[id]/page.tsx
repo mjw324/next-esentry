@@ -269,7 +269,7 @@ export default function MonitorPage() {
               <div className="hidden sm:block">
                 <StatusIndicator isActive={monitor.isActive} />
               </div>
-              <h1 className="text-2xl sm:text-xl font-bold">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold truncate">
                 {monitor.keywords.join(" ")}
               </h1>
             </div>
@@ -315,14 +315,39 @@ export default function MonitorPage() {
             </>
           ) : (
             <>
+              <Tooltip content="Cancel">
+                <Button
+                  isIconOnly
+                  variant="flat"
+                  onPress={handleCancelEdit}
+                  isDisabled={isSubmitting}
+                  className="sm:hidden"
+                >
+                  <X size={18} />
+                </Button>
+              </Tooltip>
               <Button
                 variant="flat"
                 startContent={<X size={18} />}
                 onPress={handleCancelEdit}
                 isDisabled={isSubmitting}
+                className="hidden sm:flex"
               >
                 Cancel
               </Button>
+              <Tooltip content="Save Changes">
+                <Button
+                  isIconOnly
+                  color="success"
+                  variant="flat"
+                  onPress={handleSave}
+                  isLoading={isSubmitting}
+                  isDisabled={isSubmitting}
+                  className="sm:hidden"
+                >
+                  <Save size={18} />
+                </Button>
+              </Tooltip>
               <Button
                 color="success"
                 variant="flat"
@@ -330,6 +355,7 @@ export default function MonitorPage() {
                 onPress={handleSave}
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
+                className="hidden sm:flex"
               >
                 Save Changes
               </Button>

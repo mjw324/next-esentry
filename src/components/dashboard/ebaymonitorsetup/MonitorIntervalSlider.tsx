@@ -38,7 +38,7 @@ export default function MonitorIntervalSlider({
 
   return (
     <Slider
-      label="Check Frequency"
+      label="Monitor Interval"
       value={value}
       onChange={handleChange}
       minValue={300000} // 5 minutes in milliseconds
@@ -82,19 +82,17 @@ export default function MonitorIntervalSlider({
           </Tooltip>
         </label>
       )}
-      renderThumb={({ ...props }) => (
+      renderThumb={({ index, ...props }) => (
         <div
           {...props}
           className="group p-1 top-1/2 bg-background border-small border-default-200 dark:border-default-400/50 shadow-medium rounded-full cursor-grab data-[dragging=true]:cursor-grabbing"
         >
-          <span
-            className="transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75"
-          />
+          <span className="transition-transform shadow-small rounded-full w-4 h-4 block group-data-[dragging=true]:scale-75 bg-primary" />
         </div>
       )}
       renderValue={() => (
         <div className="text-small text-default-600 font-medium">
-          Every {formatIntervalTime(value)}
+          Check Every {formatIntervalTime(value)}
         </div>
       )}
     />

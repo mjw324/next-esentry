@@ -21,7 +21,7 @@ export function Navbar() {
       isBlurred={true}
       maxWidth="full"
       classNames={{
-        base: "container mx-auto xl:px-0",
+        wrapper: "container mx-auto xl:px-0",
       }}
     >
       {/* Brand section */}
