@@ -80,7 +80,7 @@ interface CreateMonitorDto {
           email: responseData.emailStatus === 'verification_required'
             ? 'Verification required'
             : undefined,
-          monitorInterval: monitor.monitorInterval,
+          monitorInterval: monitor.interval,
         };
       } catch (error) {
         console.error('Error creating monitor:', error);
@@ -121,13 +121,13 @@ interface CreateMonitorDto {
               minPrice: monitor.minPrice,
               maxPrice: monitor.maxPrice,
               condition: monitor.conditions || [],
-              monitorInterval: monitor.monitorInterval,
+              monitorInterval: monitor.interval,
             })),
             hasActiveEmail: !!data.hasActiveEmail
           };
         } else {
           const monitorsArray = Array.isArray(data) ? data : [];
-  
+
           return {
             monitors: monitorsArray.map((monitor: any) => ({
               id: monitor.id,
@@ -138,7 +138,7 @@ interface CreateMonitorDto {
               minPrice: monitor.minPrice,
               maxPrice: monitor.maxPrice,
               condition: monitor.conditions || [],
-              monitorInterval: monitor.monitorInterval,
+              monitorInterval: monitor.interval,
             })),
             hasActiveEmail: true
           };
@@ -203,7 +203,7 @@ interface CreateMonitorDto {
           minPrice: monitor.minPrice,
           maxPrice: monitor.maxPrice,
           condition: monitor.conditions || [],
-          monitorInterval: monitor.monitorInterval,
+          monitorInterval: monitor.interval,
         };
       } catch (error) {
         console.error('Error updating monitor:', error);
