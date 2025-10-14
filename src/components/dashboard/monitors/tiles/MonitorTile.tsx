@@ -14,6 +14,7 @@ import {
   OctagonMinus,
   HandCoins,
   Store,
+  Clock,
 } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEbay } from "@fortawesome/free-brands-svg-icons";
@@ -26,6 +27,7 @@ interface MonitorTileProps {
   minPrice?: number;
   maxPrice?: number;
   condition?: string[];
+  monitorInterval?: number;
   onToggle: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -57,6 +59,27 @@ const getConditionColor = (condition: string): ConditionColorType => {
   return colorMap[condition] || "secondary";
 };
 
+// Helper function to format milliseconds to readable time (hours and minutes only)
+const formatMillisecondsToReadable = (milliseconds: number): string => {
+  if (isNaN(milliseconds) || milliseconds < 0) {
+    return "0 minutes";
+  }
+
+  const totalMinutes = Math.floor(milliseconds / (1000 * 60));
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours === 0) {
+    return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+  } else if (minutes === 0) {
+    return `${hours} hour${hours !== 1 ? "s" : ""}`;
+  } else {
+    return `${hours} hour${hours !== 1 ? "s" : ""} and ${minutes} minute${
+      minutes !== 1 ? "s" : ""
+    }`;
+  }
+};
+
 const StatusIndicator = ({ isActive }: { isActive: boolean }) => (
   <Tooltip content={isActive ? "Monitor Active" : "Monitor Paused"}>
     <div className="relative">
@@ -79,6 +102,7 @@ export default function MonitorTile({
   minPrice,
   maxPrice,
   condition,
+  monitorInterval,
   onToggle,
   onEdit,
   onDelete,
@@ -207,6 +231,19 @@ export default function MonitorTile({
                   {formatCondition(cond)}
                 </Chip>
               ))}
+            </div>
+          )}
+
+          {monitorInterval && (
+            <div className="flex items-start gap-2">
+              <Clock
+                size={18}
+                className="mt-1 text-default-400 flex-shrink-0"
+              />
+              <p className="text-default-500">
+                <span className="font-semibold">Check every:</span>{" "}
+                {formatMillisecondsToReadable(monitorInterval)}
+              </p>
             </div>
           )}
         </div>
