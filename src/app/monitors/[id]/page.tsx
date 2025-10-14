@@ -84,7 +84,8 @@ const StatusIndicator = ({ isActive }: { isActive: boolean }) => (
 export default function MonitorPage() {
   const params = useParams();
   const router = useRouter();
-  const { monitors, updateMonitor, deleteMonitor, toggleMonitor, loading } = useMonitors();
+  const { monitors, updateMonitor, deleteMonitor, toggleMonitor, loading } =
+    useMonitors();
 
   const monitorId = params.id as string;
   const monitor = monitors.find((m) => m.id === monitorId);
@@ -97,7 +98,9 @@ export default function MonitorPage() {
   const [excludedKeywords, setExcludedKeywords] = useState<string[]>([]);
   const [condition, setCondition] = useState<string[]>([]);
   const [sellers, setSellers] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number | undefined, number | undefined]>([undefined, undefined]);
+  const [priceRange, setPriceRange] = useState<
+    [number | undefined, number | undefined]
+  >([undefined, undefined]);
   const [monitorInterval, setMonitorInterval] = useState<number>(7200000);
 
   // Validation state
@@ -115,11 +118,13 @@ export default function MonitorPage() {
     const minutes = totalMinutes % 60;
 
     if (hours === 0) {
-      return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+      return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
     } else if (minutes === 0) {
-      return `${hours} hour${hours !== 1 ? 's' : ''}`;
+      return `${hours} hour${hours !== 1 ? "s" : ""}`;
     } else {
-      return `${hours} hour${hours !== 1 ? 's' : ''} and ${minutes} minute${minutes !== 1 ? 's' : ''}`;
+      return `${hours} hour${hours !== 1 ? "s" : ""} and ${minutes} minute${
+        minutes !== 1 ? "s" : ""
+      }`;
     }
   };
 
@@ -254,12 +259,14 @@ export default function MonitorPage() {
           <div className="flex items-center gap-3">
             <FontAwesomeIcon
               icon={faEbay}
-              className="text-dark dark:text-light text-3xl"
+              className="text-dark dark:text-light text-3xl hidden sm:block"
             />
-            <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-700 hidden sm:block" />
             <div className="flex items-center gap-3">
-              <StatusIndicator isActive={monitor.isActive} />
-              <h1 className="text-2xl font-bold">
+              <div className="hidden sm:block">
+                <StatusIndicator isActive={monitor.isActive} />
+              </div>
+              <h1 className="text-2xl sm:text-xl font-bold">
                 {monitor.keywords.join(" ")}
               </h1>
             </div>
@@ -269,7 +276,9 @@ export default function MonitorPage() {
         <div className="flex items-center gap-2">
           {!isEditing ? (
             <>
-              <Tooltip content={monitor.isActive ? "Pause monitor" : "Start monitor"}>
+              <Tooltip
+                content={monitor.isActive ? "Pause monitor" : "Start monitor"}
+              >
                 <Button
                   isIconOnly
                   variant="flat"
@@ -328,7 +337,11 @@ export default function MonitorPage() {
 
       {/* Main Content */}
       <Card className="w-full">
-        <CardHeader className={`ebay-gradient-border ${monitor.isActive ? "active" : "inactive"}`}>
+        <CardHeader
+          className={`ebay-gradient-border ${
+            monitor.isActive ? "active" : "inactive"
+          }`}
+        >
           <h2 className="text-lg font-semibold">
             {isEditing ? "Edit Monitor" : "Monitor Details"}
           </h2>
@@ -388,7 +401,9 @@ export default function MonitorPage() {
             <div className="space-y-6">
               {/* Keywords */}
               <div>
-                <h3 className="text-md font-semibold mb-3 text-success">Keywords</h3>
+                <h3 className="text-md font-semibold mb-3 text-success">
+                  Keywords
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {monitor.keywords.map((keyword) => (
                     <Chip key={keyword} color="success" variant="flat">
@@ -399,41 +414,51 @@ export default function MonitorPage() {
               </div>
 
               {/* Excluded Keywords */}
-              {monitor.excludedKeywords && monitor.excludedKeywords.length > 0 && (
-                <>
-                  <Divider />
-                  <div className="flex items-start gap-3">
-                    <ShoppingBag size={20} className="mt-1 text-default-400" />
-                    <div>
-                      <h3 className="text-md font-semibold mb-3">Excluded Keywords</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {monitor.excludedKeywords.map((keyword) => (
-                          <Chip key={keyword} color="danger" variant="flat">
-                            {keyword}
-                          </Chip>
-                        ))}
+              {monitor.excludedKeywords &&
+                monitor.excludedKeywords.length > 0 && (
+                  <>
+                    <Divider />
+                    <div className="flex items-start gap-3">
+                      <ShoppingBag
+                        size={20}
+                        className="mt-1 text-default-400"
+                      />
+                      <div>
+                        <h3 className="text-md font-semibold mb-3">
+                          Excluded Keywords
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                          {monitor.excludedKeywords.map((keyword) => (
+                            <Chip key={keyword} color="danger" variant="flat">
+                              {keyword}
+                            </Chip>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
 
               {/* Price Range */}
               {((monitor.minPrice !== undefined && monitor.minPrice !== null) ||
-                (monitor.maxPrice !== undefined && monitor.maxPrice !== null)) && (
+                (monitor.maxPrice !== undefined &&
+                  monitor.maxPrice !== null)) && (
                 <>
                   <Divider />
                   <div className="flex items-start gap-3">
                     <HandCoins size={20} className="mt-1 text-default-400" />
                     <div>
-                      <h3 className="text-md font-semibold mb-2">Price Range</h3>
+                      <h3 className="text-md font-semibold mb-2">
+                        Price Range
+                      </h3>
                       <p className="text-default-600">
-                        {monitor.minPrice !== undefined && monitor.minPrice !== null
-                          ? monitor.maxPrice !== undefined && monitor.maxPrice !== null
+                        {monitor.minPrice !== undefined &&
+                        monitor.minPrice !== null
+                          ? monitor.maxPrice !== undefined &&
+                            monitor.maxPrice !== null
                             ? `$${monitor.minPrice} - $${monitor.maxPrice}`
                             : `$${monitor.minPrice}+`
-                          : `<$${monitor.maxPrice}`
-                        }
+                          : `<$${monitor.maxPrice}`}
                       </p>
                     </div>
                   </div>
@@ -486,9 +511,12 @@ export default function MonitorPage() {
                 <>
                   <Divider />
                   <div>
-                    <h3 className="text-md font-semibold mb-2">Monitor Interval</h3>
+                    <h3 className="text-md font-semibold mb-2">
+                      Monitor Interval
+                    </h3>
                     <p className="text-default-600">
-                      Check every {formatMillisecondsToReadable(monitor.monitorInterval)}
+                      Check every{" "}
+                      {formatMillisecondsToReadable(monitor.monitorInterval)}
                     </p>
                   </div>
                 </>
