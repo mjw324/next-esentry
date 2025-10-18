@@ -2,7 +2,7 @@
 
 [![Next.js](https://img.shields.io/badge/Next.js-15-blue.svg)](https://nextjs.org/)
 
-eSentry is a powerful web application designed to monitor eBay for items as requested by users. It tracks new product listings in real-time and notifies users via email, detailing any new listings that meet their filters. Notifications are sent out directly after eSentry finds new matching listing(s).
+eSentry is a web application designed to monitor eBay for items as requested by users. It tracks new product listings in real-time and notifies users via email, detailing any new listings that meet their filters. Notifications are sent out directly after eSentry finds new matching listing(s).
 
 **Try eSentry** 👉 [esentry.dev](https://www.esentry.dev)
 
