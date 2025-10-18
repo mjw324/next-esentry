@@ -17,8 +17,8 @@ eSentry is a powerful web application designed to monitor eBay for items as requ
 ## 🛠️ Technology Stack
 
 - **Frontend:** Next.js, React, NextUI, Tailwind CSS
-- **Backend:** Next.js
-- **Database:** Postgres (using Prisma ORM)
+- **Backend:** Node.js
+- **Database:** Postgres (using Prisma ORM), Redis
 - **Authentication:** [Auth.js](https://authjs.dev/)
 
 ## 🔗 Related Projects
