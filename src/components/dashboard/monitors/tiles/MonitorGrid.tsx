@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Spinner, Button, Alert } from "@heroui/react";
-import { addToast } from "@heroui/toast";
 import { useRouter } from "next/navigation";
 import MonitorTile from "./MonitorTile";
 import AddMonitorTile from "./AddMonitorTile";
@@ -53,21 +52,6 @@ export default function MonitorGrid() {
     }
   };
 
-  // Show error toast when error state changes
-  useEffect(() => {
-    if (error) {
-      addToast({
-        title: "Error",
-        description: error,
-        color: "danger",
-        endContent: (
-          <Button size="sm" variant="flat" onPress={refreshMonitors}>
-            Retry
-          </Button>
-        ),
-      });
-    }
-  }, [error, refreshMonitors]);
 
   if (loading && monitors.length === 0) {
     return (
