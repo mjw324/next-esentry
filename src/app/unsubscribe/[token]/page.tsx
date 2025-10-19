@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Spinner, Button, Card, CardBody, CardHeader } from "@heroui/react";
 import { AlertCircle, CheckCircle } from "lucide-react";
 
-const API_URL = process.env.BACKEND_API_URL || "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || "https://api.esentry.dev";
 
 export default function UnsubscribePage() {
   const router = useRouter();
