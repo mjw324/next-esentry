@@ -8,16 +8,20 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Spacer,
   Divider,
-  Slider,
+  Tabs,
+  Tab,
 } from "@heroui/react";
-import type { SliderValue } from "@heroui/react";
+import { addToast } from "@heroui/toast";
 import PriceRangeSlider from "./PriceRangeSlider";
 import ChipInput from "./ChipInput";
 import ConditionCheckboxGroup from "./ConditionCheckboxGroup";
 import MonitorIntervalSlider from "./MonitorIntervalSlider";
+import CalibrationStrip from "./insights/CalibrationStrip";
+import MarketInsightsPanel from "./insights/MarketInsightsPanel";
 import { useMonitors } from "@/contexts/MonitorContext";
+import { useSession } from "@/lib/auth-client";
+import type { InsightsParams, SuggestedPriceRange } from "@/types/insights";
 
 interface EbayMonitorModalProps {
   isOpen: boolean;
@@ -76,8 +80,75 @@ function BaseEbayMonitorModal({
   const [duplicateError, setDuplicateError] = useState<string>("");
   const [modalSize, setModalSize] = useState<"lg" | "xl" | "full">("lg");
 
+  const { data: session } = useSession();
+  // Insights require an authenticated user; demo mode has no session and shows
+  // a "sign in to preview" placeholder instead of calling the endpoints.
+  const userId = isDemo ? undefined : session?.user?.id;
 
   const isLoading = loading || isSubmitting;
+
+  // Params sent to the insights endpoints, derived from the live form state.
+  // Mirrors the monitor search-param shape; conditions/sellers passed as-is.
+  const insightsParams: InsightsParams = {
+    keywords,
+    excludedKeywords,
+    minPrice: priceRange[0],
+    maxPrice: priceRange[1],
+    conditions: condition,
+    sellers,
+  };
+
+  /**
+   * Apply a suggested excluded keyword (one-tap recalibration). Dedupes and
+   * skips terms that collide with an active keyword (the modal's existing
+   * duplicate rule). Shows a confirmation toast with an Undo action.
+   */
+  const applyExcludedKeyword = (term: string) => {
+    const normalized = term.trim();
+    if (!normalized) return;
+    if (excludedKeywords.includes(normalized)) return;
+    if (keywords.includes(normalized)) {
+      addToast({
+        title: "Already a keyword",
+        description: `"${normalized}" is one of your search keywords, so it can't be excluded.`,
+        color: "warning",
+      });
+      return;
+    }
+
+    const previous = excludedKeywords;
+    setExcludedKeywords([...excludedKeywords, normalized]);
+    addToast({
+      title: "Filter updated",
+      description: `Excluding "${normalized}" from this monitor.`,
+      color: "success",
+      endContent: (
+        <Button
+          size="sm"
+          variant="flat"
+          onPress={() => setExcludedKeywords(previous)}
+        >
+          Undo
+        </Button>
+      ),
+    });
+  };
+
+  /** Apply a suggested tightened price range, with an Undo action. */
+  const applyPriceRange = ({ minPrice, maxPrice }: SuggestedPriceRange) => {
+    const previous = priceRange;
+    setPriceRange([minPrice, maxPrice]);
+    addToast({
+      title: "Price range tightened",
+      description: `Set to $${minPrice}–$${maxPrice}.`,
+      color: "success",
+      endContent: (
+        <Button size="sm" variant="flat" onPress={() => setPriceRange(previous)}>
+          Undo
+        </Button>
+      ),
+    });
+  };
 
   useEffect(() => {
     const updateModalSize = () => {
@@ -200,41 +271,64 @@ function BaseEbayMonitorModal({
             </ModalHeader>
 
             <ModalBody className="pt-3">
-              <ChipInput
-                label="Keywords"
-                values={keywords}
-                setValues={setKeywords}
-                error={keywordError}
-                chipColor="success"
-              />
-              <Divider />
-              <ChipInput
-                label="Excluded Keywords"
-                values={excludedKeywords}
-                setValues={setExcludedKeywords}
-                error={duplicateError}
-                chipColor="danger"
-              />
-              <Divider />
+              <Tabs aria-label="Monitor setup tabs" variant="underlined">
+                <Tab key="filters" title="Filters">
+                  <div className="flex flex-col gap-4">
+                    <CalibrationStrip
+                      params={insightsParams}
+                      userId={userId}
+                      onApplyExcludedKeyword={applyExcludedKeyword}
+                      onApplyPriceRange={applyPriceRange}
+                    />
+                    <ChipInput
+                      label="Keywords"
+                      values={keywords}
+                      setValues={setKeywords}
+                      error={keywordError}
+                      chipColor="success"
+                    />
+                    <Divider />
+                    <ChipInput
+                      label="Excluded Keywords"
+                      values={excludedKeywords}
+                      setValues={setExcludedKeywords}
+                      error={duplicateError}
+                      chipColor="danger"
+                    />
+                    <Divider />
 
-              <PriceRangeSlider value={priceRange} onChange={setPriceRange} />
-              <Divider />
-              <ConditionCheckboxGroup
-                condition={condition}
-                setCondition={setCondition}
-              />
-              <Divider />
-              <ChipInput
-                label="Seller(s)"
-                values={sellers}
-                setValues={setSellers}
-                chipColor="primary"
-              />
-              <Divider />
-              <MonitorIntervalSlider
-                value={monitorInterval}
-                onChange={setMonitorInterval}
-              />
+                    <PriceRangeSlider
+                      value={priceRange}
+                      onChange={setPriceRange}
+                    />
+                    <Divider />
+                    <ConditionCheckboxGroup
+                      condition={condition}
+                      setCondition={setCondition}
+                    />
+                    <Divider />
+                    <ChipInput
+                      label="Seller(s)"
+                      values={sellers}
+                      setValues={setSellers}
+                      chipColor="primary"
+                    />
+                    <Divider />
+                    <MonitorIntervalSlider
+                      value={monitorInterval}
+                      onChange={setMonitorInterval}
+                    />
+                  </div>
+                </Tab>
+                <Tab key="insights" title="Market Insights">
+                  <MarketInsightsPanel
+                    params={insightsParams}
+                    userId={userId}
+                    onApplyExcludedKeyword={applyExcludedKeyword}
+                    onApplyPriceRange={applyPriceRange}
+                  />
+                </Tab>
+              </Tabs>
             </ModalBody>
 
             <ModalFooter>
