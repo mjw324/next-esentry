@@ -10,8 +10,10 @@ export function paramsKey(p: InsightsParams): string {
       .map((k) => k.trim())
       .filter(Boolean)
       .sort(),
-    minPrice: p.minPrice ?? null,
-    maxPrice: p.maxPrice ?? null,
+    // Unset prices must be left out, not sent as null: the API rejects null.
+    // JSON.stringify drops undefined fields.
+    minPrice: p.minPrice ?? undefined,
+    maxPrice: p.maxPrice ?? undefined,
     conditions: [...(p.conditions ?? [])].sort(),
     sellers: [...(p.sellers ?? [])].map((s) => s.trim()).filter(Boolean).sort(),
   });
