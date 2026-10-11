@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Discover rare eBay items instantly",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "prisma": {
     "schema": "node_modules/@mjw324/prisma-shared/prisma/schema.prisma"
   },
