@@ -53,7 +53,8 @@ export interface AspectSummary {
 /** `POST /api/insights/market` */
 export interface MarketSnapshot {
   totalActive: number;
-  priceStats: PriceStats;
+  /** null when the query has no active listings (nothing to price). */
+  priceStats: PriceStats | null;
   conditionDistribution: ConditionBreakdown[];
   buyingOptions: BuyingOptionSplit[];
   topAspects: AspectSummary[];

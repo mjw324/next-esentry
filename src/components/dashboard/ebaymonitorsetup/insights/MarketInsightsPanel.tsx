@@ -101,7 +101,7 @@ export default function MarketInsightsPanel({
     );
   }
 
-  const currency = snapshot?.priceStats.currency ?? "USD";
+  const currency = snapshot?.priceStats?.currency ?? "USD";
   const distributionsEmpty =
     !!snapshot &&
     snapshot.conditionDistribution.length === 0 &&
@@ -164,7 +164,13 @@ export default function MarketInsightsPanel({
                 <p className="mb-2 text-tiny font-medium uppercase tracking-wide text-default-500">
                   Price spread
                 </p>
-                <PriceBoxPlot stats={snapshot.priceStats} />
+                {snapshot.priceStats ? (
+                  <PriceBoxPlot stats={snapshot.priceStats} />
+                ) : (
+                  <p className="text-tiny text-default-400">
+                    No active listings to price.
+                  </p>
+                )}
               </div>
 
               <Divider />
