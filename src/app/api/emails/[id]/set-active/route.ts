@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { backendAuth } from '@/lib/backend-auth';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
@@ -9,11 +10,13 @@ export async function PUT(
   try {
     const { id } = await params;
 
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { userId } = caller;
 
     console.log(`Setting alert email ${id} as active for user ${userId}`);
 
@@ -21,7 +24,7 @@ export async function PUT(
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'User-Id': userId,
+        ...caller.headers,
       },
     });
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { backendAuth } from '@/lib/backend-auth';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
@@ -9,11 +10,13 @@ export async function PATCH(
   try {
     const { id } = await params;
 
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { userId } = caller;
 
     const body = await req.json();
     const dataWithUserId = { ...body, userId };
@@ -24,7 +27,7 @@ export async function PATCH(
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        'User-Id': userId,
+        ...caller.headers,
       },
       body: JSON.stringify(dataWithUserId),
     });
@@ -69,18 +72,20 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { userId } = caller;
 
     console.log(`Deleting monitor ${id} for user ${userId}`);
 
     const response = await fetch(`${API_URL}/api/monitors/${id}`, {
       method: 'DELETE',
       headers: {
-        'User-Id': userId,
+        ...caller.headers,
       },
     });
 

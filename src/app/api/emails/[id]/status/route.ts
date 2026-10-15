@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { backendAuth } from '@/lib/backend-auth';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
@@ -9,9 +10,9 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -20,7 +21,7 @@ export async function GET(
     const response = await fetch(`${API_URL}/api/emails/${id}/status`, {
       headers: {
         'Content-Type': 'application/json',
-        'User-Id': userId,
+        ...caller.headers,
       },
     });
 

@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
+import { backendAuth } from "@/lib/backend-auth";
 
 const API_URL = process.env.BACKEND_API_URL || "http://localhost:3000";
 
 /**
  * Shared proxy logic for the three insights endpoints. Mirrors the
- * `api/monitors/route.ts` pattern: require the `user-id` header, forward the
- * body + `User-Id` to the backend, and pass through the status (including 429
- * for quota) and JSON body.
+ * `api/monitors/route.ts` pattern: require a signed-in session, forward the
+ * body and the session credentials to the backend, and pass through the
+ * status (including 429 for quota) and JSON body.
  */
 export async function forwardInsights(
   req: NextRequest,
   endpoint: "market" | "outliers" | "calibrate"
 ) {
   try {
-    const userId = req.headers.get("user-id");
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -25,7 +26,7 @@ export async function forwardInsights(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Id": userId,
+        ...caller.headers,
       },
       body: JSON.stringify(body),
     });

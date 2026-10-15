@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { backendAuth } from '@/lib/backend-auth';
 
 const API_URL = process.env.BACKEND_API_URL || 'http://localhost:3000';
 
 export async function GET(req: NextRequest,) {
   try {
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { userId } = caller;
 
     console.log('Fetching monitors for user:', userId);
 
     const response = await fetch(`${API_URL}/api/monitors`, {
       headers: {
         'Content-Type': 'application/json',
-        'User-Id': userId,
+        ...caller.headers,
       },
     });
 
@@ -52,11 +55,13 @@ export async function GET(req: NextRequest,) {
 
 export async function POST(req: NextRequest) {
   try {
-    const userId = req.headers.get('user-id');
+    const caller = await backendAuth(req);
 
-    if (!userId) {
+    if (!caller) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { userId } = caller;
 
     const body = await req.json();
 
@@ -67,7 +72,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'User-Id': userId,
+        ...caller.headers,
       },
       body: JSON.stringify(dataWithUserId),
     });
