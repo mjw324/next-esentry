@@ -110,7 +110,6 @@ export default function AlertPreferencesClient({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "user-id": session.user.id,
         },
       });
       if (!response.ok) {
@@ -172,7 +171,6 @@ export default function AlertPreferencesClient({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "user-id": session.user.id,
         },
         body: JSON.stringify({ email: newEmail }),
       });
@@ -234,7 +232,6 @@ export default function AlertPreferencesClient({
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "user-id": session.user.id,
           },
         });
 
@@ -287,7 +284,6 @@ export default function AlertPreferencesClient({
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "user-id": session.user.id,
           },
         });
 
@@ -367,7 +363,6 @@ export default function AlertPreferencesClient({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "user-id": session.user.id,
         },
         body: JSON.stringify({ otp: otpValue }),
       });
@@ -422,7 +417,6 @@ export default function AlertPreferencesClient({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "user-id": session.user.id,
           },
         }
       );

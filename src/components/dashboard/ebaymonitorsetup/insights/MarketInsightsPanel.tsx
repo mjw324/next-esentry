@@ -64,8 +64,8 @@ export default function MarketInsightsPanel({
     setRateLimited(false);
 
     Promise.all([
-      insightsService.market(debouncedParams, userId),
-      insightsService.outliers(debouncedParams, userId),
+      insightsService.market(debouncedParams),
+      insightsService.outliers(debouncedParams),
     ])
       .then(([market, outlierResult]) => {
         if (id !== requestId.current) return;

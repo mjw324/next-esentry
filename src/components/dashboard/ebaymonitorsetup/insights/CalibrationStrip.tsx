@@ -54,7 +54,7 @@ export default function CalibrationStrip({
     setRateLimited(false);
 
     insightsService
-      .calibrate(debouncedParams, userId)
+      .calibrate(debouncedParams)
       .then((result) => {
         if (id !== requestId.current) return;
         setSummary(result);

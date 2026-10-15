@@ -29,7 +29,7 @@ export async function PATCH(
         'Content-Type': 'application/json',
         ...caller.headers,
       },
-      body: JSON.stringify({ active, userId }),
+      body: JSON.stringify({ active }),
     });
 
     if (!response.ok) {

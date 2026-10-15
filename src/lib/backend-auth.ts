@@ -22,10 +22,6 @@ export async function backendAuth(req: NextRequest) {
     userId: session.user.id,
     headers: {
       Authorization: `Bearer ${session.session.token}`,
-      // Only for backends deployed before F-1, which read the user from this
-      // header. Taken from the verified session, so it is safe to send. Drop it
-      // once the backend that checks the Bearer token is live.
-      "User-Id": session.user.id,
     },
   };
 }

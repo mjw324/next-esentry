@@ -28,10 +28,9 @@ interface CreateMonitorDto {
     /**
      * Create a new monitor
      * @param data Monitor creation data
-     * @param userId User ID to include in request headers
      * @returns The newly created monitor
      */
-    async create(data: CreateMonitorDto, userId: string): Promise<Monitor> {
+    async create(data: CreateMonitorDto): Promise<Monitor> {
       // Validate required fields
       if (!data.keywords || data.keywords.length === 0) {
         throw new Error('Keywords are required');
@@ -54,7 +53,6 @@ interface CreateMonitorDto {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'user-id': userId,
           },
           body: JSON.stringify(backendData),
         });
@@ -90,17 +88,12 @@ interface CreateMonitorDto {
   
     /**
      * Get all monitors for the current user
-     * @param userId User ID to include in request headers
      * @returns List of monitors and hasActiveEmail status
      */
-    async getAll(userId: string): Promise<{monitors: Monitor[], hasActiveEmail: boolean}> {
+    async getAll(): Promise<{monitors: Monitor[], hasActiveEmail: boolean}> {
       try {
         console.log('Fetching monitors from API endpoint');
-        const response = await fetch(this.apiEndpoint, {
-          headers: {
-            'user-id': userId,
-          }
-        });
+        const response = await fetch(this.apiEndpoint);
   
         if (!response.ok) {
           const errorData = await response.json().catch(() => ({}));
@@ -153,10 +146,9 @@ interface CreateMonitorDto {
      * Update an existing monitor
      * @param id Monitor ID
      * @param updates Partial monitor data to update
-     * @param userId User ID to include in request headers
      * @returns The updated monitor
      */
-    async update(id: string, updates: Partial<Monitor>, userId: string): Promise<Monitor> {
+    async update(id: string, updates: Partial<Monitor>): Promise<Monitor> {
       try {
         // Transform the updates to match the backend schema
         const backendUpdates = {
@@ -182,7 +174,6 @@ interface CreateMonitorDto {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
-            'user-id': userId,
           },
           body: JSON.stringify(backendUpdates),
         });
@@ -214,15 +205,11 @@ interface CreateMonitorDto {
     /**
      * Delete a monitor
      * @param id Monitor ID
-     * @param userId User ID to include in request headers
      */
-    async delete(id: string, userId: string): Promise<void> {
+    async delete(id: string): Promise<void> {
       try {
         const response = await fetch(`${this.apiEndpoint}/${id}`, {
           method: 'DELETE',
-          headers: {
-            'user-id': userId,
-          }
         });
   
         if (!response.ok) {
@@ -239,11 +226,10 @@ interface CreateMonitorDto {
      * Toggle a monitor's active status
      * @param id Monitor ID
      * @param isActive New active status
-     * @param userId User ID to include in request headers
      * @returns The updated monitor
      */
-    async toggle(id: string, isActive: boolean, userId: string): Promise<Monitor> {
-      return this.update(id, { isActive }, userId);
+    async toggle(id: string, isActive: boolean): Promise<Monitor> {
+      return this.update(id, { isActive });
     }
   }
   

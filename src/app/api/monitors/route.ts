@@ -61,12 +61,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { userId } = caller;
-
     const body = await req.json();
-
-    const dataWithUserId = { ...body, userId };
-    console.log('Creating monitor with data:', dataWithUserId);
+    console.log('Creating monitor with data:', body);
 
     const response = await fetch(`${API_URL}/api/monitors`, {
       method: 'POST',
@@ -74,7 +70,7 @@ export async function POST(req: NextRequest) {
         'Content-Type': 'application/json',
         ...caller.headers,
       },
-      body: JSON.stringify(dataWithUserId),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

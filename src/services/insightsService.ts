@@ -20,8 +20,9 @@ export function isRateLimitError(err: unknown): err is RateLimitError {
 
 /**
  * Client for the Active Market Insights endpoints. Mirrors `monitorService`:
- * each method takes `(params, userId)` and fetches the Next.js proxy route with
- * the `user-id` header. Backend response contracts are the source of truth —
+ * each method takes the query params and fetches the Next.js proxy route, which
+ * identifies the user from the session cookie. Backend response contracts are
+ * the source of truth —
  * these methods return the payloads verbatim without recomputing stats.
  */
 class InsightsService {
@@ -29,14 +30,12 @@ class InsightsService {
 
   private async post<T>(
     endpoint: "market" | "outliers" | "calibrate",
-    params: InsightsParams,
-    userId: string
+    params: InsightsParams
   ): Promise<T> {
     const response = await fetch(`${this.base}/${endpoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "user-id": userId,
       },
       body: JSON.stringify(params),
     });
@@ -55,16 +54,16 @@ class InsightsService {
     return response.json() as Promise<T>;
   }
 
-  market(params: InsightsParams, userId: string): Promise<MarketSnapshot> {
-    return this.post<MarketSnapshot>("market", params, userId);
+  market(params: InsightsParams): Promise<MarketSnapshot> {
+    return this.post<MarketSnapshot>("market", params);
   }
 
-  outliers(params: InsightsParams, userId: string): Promise<OutlierResult> {
-    return this.post<OutlierResult>("outliers", params, userId);
+  outliers(params: InsightsParams): Promise<OutlierResult> {
+    return this.post<OutlierResult>("outliers", params);
   }
 
-  calibrate(params: InsightsParams, userId: string): Promise<CalibrationSummary> {
-    return this.post<CalibrationSummary>("calibrate", params, userId);
+  calibrate(params: InsightsParams): Promise<CalibrationSummary> {
+    return this.post<CalibrationSummary>("calibrate", params);
   }
 }
 

@@ -93,7 +93,7 @@ export function MonitorProvider({
       }
 
       console.log("Refreshing monitors...");
-      const data = await MonitorService.getAll(session.user.id);
+      const data = await MonitorService.getAll();
       console.log("Successfully fetched monitors:", data);
 
       // Update both monitors and hasActiveEmail state
@@ -137,10 +137,7 @@ export function MonitorProvider({
         ...monitorData,
         useLoginEmail: true,
       });
-      const newMonitor = await MonitorService.create(
-        monitorData,
-        session.user.id
-      );
+      const newMonitor = await MonitorService.create(monitorData);
       setMonitors((current) => [...current, newMonitor]);
       addToast({
         title: "Monitor Created",
@@ -193,11 +190,7 @@ export function MonitorProvider({
         return;
       }
 
-      const updatedMonitor = await MonitorService.update(
-        id,
-        updates,
-        session.user.id
-      );
+      const updatedMonitor = await MonitorService.update(id, updates);
       setMonitors((current) =>
         current.map((monitor) => (monitor.id === id ? updatedMonitor : monitor))
       );
@@ -235,7 +228,7 @@ export function MonitorProvider({
         return;
       }
 
-      await MonitorService.delete(id, session.user.id);
+      await MonitorService.delete(id);
       setMonitors((current) => current.filter((monitor) => monitor.id !== id));
       addToast({
         title: "Success",
@@ -274,11 +267,7 @@ export function MonitorProvider({
       const monitor = monitors.find((m) => m.id === id);
       if (!monitor) throw new Error("Monitor not found");
 
-      const updatedMonitor = await MonitorService.toggle(
-        id,
-        !monitor.isActive,
-        session.user.id
-      );
+      const updatedMonitor = await MonitorService.toggle(id, !monitor.isActive);
       setMonitors((current) =>
         current.map((m) => (m.id === id ? updatedMonitor : m))
       );

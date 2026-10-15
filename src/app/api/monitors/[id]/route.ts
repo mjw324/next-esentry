@@ -19,9 +19,8 @@ export async function PATCH(
     const { userId } = caller;
 
     const body = await req.json();
-    const dataWithUserId = { ...body, userId };
 
-    console.log(`Updating monitor ${id} for user ${userId} with:`, dataWithUserId);
+    console.log(`Updating monitor ${id} for user ${userId} with:`, body);
 
     const response = await fetch(`${API_URL}/api/monitors/${id}`, {
       method: 'PATCH',
@@ -29,7 +28,7 @@ export async function PATCH(
         'Content-Type': 'application/json',
         ...caller.headers,
       },
-      body: JSON.stringify(dataWithUserId),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
